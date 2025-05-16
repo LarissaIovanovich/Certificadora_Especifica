@@ -7,8 +7,11 @@ const Usuario = sequelize.define('usuarios', {
   email: { type: DataTypes.STRING, unique: true, allowNull: false },
   senha_hash: { type: DataTypes.STRING, allowNull: false },
   papel: { type: DataTypes.STRING },
-  criado_em: { type: DataTypes.DATE },
-  atualizado_em: { type: DataTypes.DATE }
-}, { timestamps: false, tableName: 'usuarios' });
+}, {
+  timestamps: true,
+  tableName: 'usuarios',
+  createdAt: 'criado_em',
+  updatedAt: 'atualizado_em'
+});
 
 module.exports = Usuario;

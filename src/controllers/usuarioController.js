@@ -1,5 +1,6 @@
 const Usuario = require('../models/Usuario');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
 
@@ -50,6 +51,26 @@ module.exports = {
     } catch (err) {
       // Em caso de erro, retorna status 500 (Internal Server Error) e a mensagem de erro
       res.status(500).json({ error: err.message });
+    }
+  },
+
+  async login(req, res) {
+    try {
+      const { email, senha } = req.body;
+
+      const usuario = await Usuario.findOne({ where: { email } });
+      if (!usuario) return res.status(401).json({ error: 'Usuário não encontrado' });
+
+      const isPasswordValid = await bcrypt.compare(senha, usuario.senha_hash);
+      if (!isPasswordValid) return res.status(401).json({ error: 'Senha inválida' });
+
+      // gera o token JWT
+      const token = jwt.sign({ usuarioID: usuario }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+      return res.json({ message: "Autenticado com sucesso", token });
+    } catch (err) {
+      console.error(err)
+      return res.status(500).json({ error: err.message });
     }
   }
 };

@@ -1,15 +1,26 @@
 const Usuario = require('../models/Usuario');
+const bcrypt = require('bcrypt');
 
 module.exports = {
 
   async create(req, res) {
     try {
-     
-      const usuario = await Usuario.create(req.body);
-     
+      const { senha_hash, ...userdata } = req.body;
+
+      if (senha_hash.length < 8) return res.status(400).json({ error: 'A senha deve ter no mínimo 8 caracteres' });
+
+      // gera hash
+      const salt = await bcrypt.genSalt(10);
+      const senhaHash = await bcrypt.hash(senha_hash, salt);
+      const usuario = await Usuario.create({ ...userdata, senha_hash: senhaHash });
+
       res.status(201).json(usuario);
     } catch (err) {
-     
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        return res.status(400).json({
+          error: 'Email ou nome de usuário já existe'
+        });
+      }
       res.status(400).json({ error: err.message });
     }
   },

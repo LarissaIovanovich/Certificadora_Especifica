@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 
-const authMiddleware = async (req, res, next) => {
+exports.authMiddleware = async (req, res, next) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
         if (!token) {
@@ -16,4 +16,13 @@ const authMiddleware = async (req, res, next) => {
     }
 };
 
-module.exports = authMiddleware;
+exports.requireRole = (allowedRoles) => {
+    return (req, res, next) => {
+        allowedRoles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+
+        if (allowedRoles.includes(req.user?.papel)) return next();
+
+        // papel do usuário não está na lista allowedRoles
+        return res.status(403).json({ message: "Você não tem permissão para utilizar este recurso" });
+    };
+};

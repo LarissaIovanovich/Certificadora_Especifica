@@ -1,6 +1,7 @@
 const Usuario = require('../models/Usuario');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const helpers = require('../utils/helpers');
 
 module.exports = {
 
@@ -8,7 +9,13 @@ module.exports = {
     try {
       const { senha_hash, ...userdata } = req.body;
 
-      if (senha_hash.length < 8) return res.status(400).json({ error: 'A senha deve ter no mínimo 8 caracteres' });
+      if (!helpers.validateEmail(userdata.email)) {
+        return res.status(400).json({ error: 'Email inválido' });
+      }
+
+      if (senha_hash.length < 8) {
+        return res.status(400).json({ error: 'A senha deve ter no mínimo 8 caracteres' });
+      }
 
       // gera hash
       const salt = await bcrypt.genSalt(10);
@@ -26,20 +33,18 @@ module.exports = {
     }
   },
 
-
   async list(req, res) {
     try {
-     
+
       const usuarios = await Usuario.findAll();
-    
+
       res.json(usuarios);
     } catch (err) {
-      
+
       res.status(500).json({ error: err.message });
     }
   },
 
-  // Busca um usuário pelo ID
   async getById(req, res) {
     try {
       // Busca o usuário pelo ID passado como parâmetro na URL

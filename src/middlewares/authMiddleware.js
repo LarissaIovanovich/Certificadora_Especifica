@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
+const Usuario = require('../models/Usuario');
 
 exports.authMiddleware = async (req, res, next) => {
     try {
@@ -9,7 +10,12 @@ exports.authMiddleware = async (req, res, next) => {
         }
 
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-        req.user = decoded;
+        const usuario = await Usuario.findByPk(decoded.usuarioID);
+        if (!usuario) {
+            return res.status(401).json({ message: 'Token de usuário inválido' });
+        }
+
+        req.user = usuario;
         next();
     } catch (error) {
         return res.status(401).json({ message: 'Token inválido' });

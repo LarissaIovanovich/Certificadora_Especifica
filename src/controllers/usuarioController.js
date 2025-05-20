@@ -70,7 +70,7 @@ module.exports = {
       if (!isPasswordValid) return res.status(401).json({ error: 'Senha inválida' });
 
       // gera o token JWT
-      const token = jwt.sign({ usuarioID: usuario }, process.env.JWT_SECRET, { expiresIn: "7d" });
+      const token = jwt.sign({ usuarioID: usuario.dataValues.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
       return res.json({ message: "Autenticado com sucesso", token });
     } catch (err) {

@@ -1,0 +1,222 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Bebas Neue', sans-serif;
+    background: url('fundo.png') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    position: relative;
+    z-index: 0;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Fundo escurecido */
+    z-index: -1;
+}
+
+/* Faixa preta superior */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #000;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+/* Botão de menu */
+.menu-button {
+    background: transparent;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 40px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.menu-button .bar {
+    height: 4px;
+    width: 100%;
+    background-color: #FFD700;
+    border-radius: 2px;
+}
+
+/* Menu lateral */
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 220px;
+    background-color: #FFD700;
+    padding: 80px 20px 20px;
+    transform: translateX(-100%);
+    transition: transform 0.4s ease-in-out;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.side-menu.active {
+    transform: translateX(0);
+}
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.side-menu ul li {
+    margin-bottom: 20px;
+}
+
+.side-menu ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Layout geral */
+.layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 100px 20px 40px;
+}
+
+/* Título principal */
+.title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 40px;
+    text-shadow: 1px 1px 8px black;
+}
+
+/* Conteúdo */
+.content {
+    width: 100%;
+    max-width: 1000px;
+}
+
+/* -------- Tabela de Resultados (match-results) com destaque -------- */
+.match-results {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 3px solid #FFD700;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 40px;
+    box-shadow:
+        0 0 25px rgba(255, 215, 0, 0.3),
+        inset 0 0 10px rgba(255, 215, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.match-results:hover {
+    transform: scale(1.01);
+    box-shadow:
+        0 0 35px rgba(255, 215, 0, 0.5),
+        inset 0 0 12px rgba(255, 215, 0, 0.15);
+}
+
+.match-results table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.match-results th {
+    padding: 12px 20px;
+    text-align: left;
+    color: #f0c000;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.match-results td {
+    padding: 12px 20px;
+    text-align: left;
+    color: #fff;
+}
+
+.match-results tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ----------------------- */
+/* TABELA DE CLASSIFICAÇÃO (total-score) ORIGINAL, sem encolher números */
+/* ----------------------- */
+.total-score {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 3px solid #FFD700;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 20px;
+    box-shadow:
+        0 0 25px rgba(255, 215, 0, 0.3),
+        inset 0 0 10px rgba(255, 215, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.total-score:hover {
+    transform: scale(1.01);
+    box-shadow:
+        0 0 35px rgba(255, 215, 0, 0.5),
+        inset 0 0 12px rgba(255, 215, 0, 0.15);
+}
+
+.score-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+    color: #fff;
+    letter-spacing: normal;
+    text-shadow: none;
+}
+
+.total-score table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.total-score th,
+.total-score td {
+    padding: 12px 20px;
+    text-align: left;
+    color: #fff;
+}
+
+.total-score th {
+    color: #FFD700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.total-score tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}

@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const authMiddleware = require('./middlewares/authMiddleware');
 const usersRoutes = require('./routes/usersRoutes');
 const equipesRoutes = require('./routes/equipesRoutes');
@@ -10,6 +11,11 @@ const resultadosRoutes = require('./routes/resultadosRoutes');
 
 const app = express();
 
+app.use(cors({
+    origin: '*',
+    credentials: true
+  }));
+  
 // Middleware
 app.use(bodyParser.json());
 // app.use(authMiddleware);

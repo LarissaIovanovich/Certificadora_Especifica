@@ -71,7 +71,6 @@ module.exports = {
 
       // gera o token JWT
       const token = jwt.sign({ usuarioID: usuario.dataValues.id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-
       return res.json({ message: "Autenticado com sucesso", token });
     } catch (err) {
       console.error(err)

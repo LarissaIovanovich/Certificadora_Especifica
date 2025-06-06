@@ -1,49 +1,13 @@
-/* Animação de transição suave ao carregar a página */
-@keyframes fadeInPage {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes glowPulse {
-  0%, 100% {
-  }
-  50% {
-  }
-}
-
-/* Reset de margem, preenchimento e box-sizing para consistência */
-* {
+/* Reset básico */
+html,
+body {
+  height: auto;
+  width: 100%;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-/* Estilo geral da página */
-body {
-  font-family: 'Bebas Neue', sans-serif;
-  background-image: url('../assets/fundo.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Barra de navegação no topo */
-.navbar {
-  background-color: black;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  overflow-y: auto;
+  background-color: #111;
 }
 
 /* Logotipo */
@@ -57,6 +21,9 @@ body {
   display: flex;
   gap: 2rem;
   list-style: none;
+  margin: 0;
+  /* garantir */
+  padding: 0;
 }
 
 .menu li a {
@@ -71,53 +38,93 @@ body {
   text-decoration: underline;
 }
 
-/* Container principal da seção de campeonatos */
+/* Navbar fixa */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #000;
+  color: white;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Essencial */
+  padding: 10px 20px;
+}
+
+/* Containers principais */
+.main-container {
+  width: 100vw;
+  margin: 0;
+  padding: 70px 0 0 0;
+  /* ajustado para compensar navbar fixa */
+  box-sizing: border-box;
+  padding-top: 20px;
+}
+
 .campeonatos-container {
   display: flex;
   margin-top: 2rem;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: transparent;
   border-radius: 8px;
   overflow: hidden;
   min-height: 600px;
+  width: 100%;
 }
 
-/* Ajuste de margem/padding para containers */
-.main-container,
-.form-container,
-.campeonatos-container {
-  margin-top: 0;
-  padding-top: 0;
-}
-
-/* Barra lateral com categorias ou opções */
+/* Sidebar - filtros */
 .sidebar {
   width: 250px;
   background-color: #ffd500;
   color: black;
   padding: 20px;
+  font-family: 'Arial', sans-serif;
 }
 
 .sidebar h2 {
-  font-size: 18px;
+  font-size: 16px;
   margin-bottom: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .sidebar h3 {
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 14px;
+  font-weight: bold;
 }
 
 .sidebar ul {
   list-style: none;
+  padding-left: 0;
+  margin: 0;
 }
 
 .sidebar li {
+  display: flex;
+  align-items: center;
   margin-bottom: 8px;
-  font-size: 14px;
+  font-size: 13px;
+  gap: 8px;
 }
 
-/* Área de conteúdo principal */
+.sidebar input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: black;
+  cursor: pointer;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+/* Conteúdo principal */
 .main-content {
   flex: 1;
   padding: 20px;
@@ -131,14 +138,14 @@ body {
   display: inline-block;
 }
 
-/* Layout de grade para os itens */
+/* Grid de cards */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
 }
 
-/* Espaço reservado para imagens */
+/* Placeholder de imagem */
 .image-placeholder {
   width: 100px;
   height: 100px;
@@ -151,68 +158,34 @@ body {
   font-size: 12px;
 }
 
-.image-placeholder img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Etiquetas visuais nos itens */
-.tag {
-  display: inline-block;
-  padding: 5px 10px;
-  font-size: 12px;
-  margin-top: 8px;
-  font-weight: bold;
-  color: black;
-}
-
-/* Botões estilizados */
-.ye-button, .gr-button, .wh-button {
-  display: inline-block;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 12px;
-  text-decoration: none;
-  padding: 2.5px 10px 2.5px 5px;
-  position: relative;
+.image-placeholder {
+  width: 110px;
+  height: 100px;
+  overflow: hidden;
   border-radius: 10px;
-  transition: background-color 0.3s ease;
 }
 
-.ye-button {
-  background-color: #FFD700;
-  color: black;
-}
 
-.gr-button {
-  background-color: #999;
-  color: black;
-}
-
-.wh-button {
-  background-color: white;
-  color: black;
-}
-
-/* Cartões interativos com efeito visual */
+/* Cards */
 .card {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  /* garantir que elementos fiquem lado a lado */
   padding: 10px;
   background-color: #1a1a1a;
   border: 1px solid #FFD700;
+  border-radius: 10px;
+  /* borda arredondada geral */
   color: white;
   position: relative;
   overflow: hidden;
   text-decoration: none;
   transition: all 0.3s ease-in-out;
-  border-radius: 10px;
-  z-index: 1;
-  cursor: pointer;
-  min-height: 120px;
   box-shadow: 0 0 4px #FFD700, 0 0 8px #FFD70044;
+  min-height: 120px;
+  cursor: pointer;
 }
 
 .card:hover {
@@ -220,7 +193,6 @@ body {
   border-color: #FFD700;
 }
 
-/* Efeitos visuais ao passar o mouse */
 .card::before,
 .card::after {
   content: '';
@@ -252,9 +224,13 @@ body {
 }
 
 .card-content {
+  flex: 1;
+  /* ocupa o resto do espaço */
+  text-align: right;
+  margin-left: auto;
+  /* empurra para direita */
   position: relative;
   z-index: 1;
-  text-align: center;
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -262,7 +238,6 @@ body {
   opacity: 0;
 }
 
-/* Texto exibido no hover */
 .card .hover-label {
   text-shadow: 2px 2px 4px black;
   position: absolute;
@@ -279,7 +254,7 @@ body {
   opacity: 1;
 }
 
-/* Títulos de seções com barra decorativa */
+/* Títulos de seção */
 .section-title {
   display: flex;
   align-items: center;
@@ -296,7 +271,7 @@ body {
   opacity: 0.3;
 }
 
-/* Títulos com marcador lateral */
+/* Indicadores visuais nas seções */
 .inscricoesabertas h1,
 .emandamento h1,
 .finalizados h1 {
@@ -318,10 +293,3 @@ body {
   background-color: #FFD700;
   border-radius: 4px;
 }
-
-
-
-
-
-
-

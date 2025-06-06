@@ -1,6 +1,10 @@
 import { useState } from "react";
 import "./LoginPage.css";
 import { login } from "../services/api";
+import imgArte from '../assets/IMG.jpg';
+import { FaUser, FaLock } from "react-icons/fa";
+
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,23 +23,24 @@ export default function LoginPage() {
 
       setLoginMessage("Login realizado com sucesso!");
       setTimeout(() => {
-     //   window.location.href = "/cadastro";
+        // window.location.href = "/cadastro";
       }, 1000);
     } catch (error) {
-      //pendente: fazer verificacao e retornar msg da api
       setLoginMessage("Nome ou senha inválidos. Tente novamente.");
-      console.log(error)
+      console.log(error);
     }
   };
 
   return (
-    <div className="background-overlay">
+    <div className="login-page-wrapper">
+      <div className="background-overlay" />
       <div className="main-container">
         <div className="login-container">
           <h1 className="title">ATLÉTICA FÚRIA UTFPR</h1>
           <p className="subtitle">LOGIN</p>
           <form onSubmit={handleSubmit}>
             <div className="input-group">
+              <FaUser />
               <input
                 type="text"
                 placeholder="Email"
@@ -45,6 +50,7 @@ export default function LoginPage() {
               />
             </div>
             <div className="input-group">
+              <FaLock />
               <input
                 type="password"
                 placeholder="Senha"
@@ -53,7 +59,6 @@ export default function LoginPage() {
                 required
               />
             </div>
-           
             <button type="submit">ENTRAR</button>
           </form>
           <p id="loginMessage" style={{ color: loginMessage === "Login realizado com sucesso!" ? "limegreen" : "#e74c3c" }}>
@@ -61,9 +66,10 @@ export default function LoginPage() {
           </p>
         </div>
         <div className="image-container">
-          <img src="IMG.jpg" alt="Arte da Atlética" />
+          <img src={imgArte} alt="Arte da Atlética" />
         </div>
       </div>
     </div>
   );
 }
+

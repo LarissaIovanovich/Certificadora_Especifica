@@ -209,7 +209,7 @@ button:hover {
 
 
 
-input[type="text"],
+input[type="email"],
 input[type="text"],
 input[type="password"] {
   background-color: #000000 !important;

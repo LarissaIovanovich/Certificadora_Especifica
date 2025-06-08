@@ -1,15 +1,3 @@
-/* Reset básico */
-html,
-body {
-  height: auto;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow-y: auto;
-  background-color: #111;
-}
-
 /* Logotipo */
 .logo {
   font-size: 1.5rem;

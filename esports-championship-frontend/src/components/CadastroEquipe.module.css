@@ -23,27 +23,9 @@
 }
 
 /* Estilos base da página, incluindo fonte e fundo */
-body {
-  font-family: 'Bebas Neue', sans-serif;
-  background-image: url('../assets/fundo.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
+
 
 /* Camada escura sobre o fundo para melhorar a leitura */
-body::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: -1;
-}
 
 img {
   max-width: 200px !important;

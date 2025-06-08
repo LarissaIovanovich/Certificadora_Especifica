@@ -17,33 +17,6 @@
   box-sizing: border-box;
 }
 
-/* Estilização base do corpo da página: tipografia personalizada, imagem de fundo ajustada e estrutura vertical flexível */
-body {
-  font-family: 'Bebas Neue', sans-serif;
-  background-color: #040404;
-  background-image: url('../assets/fundo.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-size: 1.125rem;
-  position: relative;
-  z-index: 0;
-}
-
-/* Aplicação de sobreposição escura translúcida sobre a imagem de fundo, para reforçar a legibilidade dos elementos acima */
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: -1;
-  pointer-events: none;
-}
-
 /* Área superior fixa contendo logotipo e menu de navegação */
 .navbar {
   background-color: black;

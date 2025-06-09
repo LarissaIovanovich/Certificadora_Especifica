@@ -1,42 +1,18 @@
-import React, { useState } from "react";
-import "./placar.module.css";
+import React from "react";
+import styles from "./placar.module.css";
 
 export default function Classificacao() {
-  const [menuAtivo, setMenuAtivo] = useState(false);
-
-  function toggleMenu() {
-    setMenuAtivo((ativo) => !ativo);
-  }
-
   return (
     <>
-      {/* Top Bar */}
-      <div className="top-bar">
-        <button className="menu-button" onClick={toggleMenu} aria-label="Toggle menu">
-          <div className="bar"></div>
-          <div className="bar"></div>
-          <div className="bar"></div>
-        </button>
-      </div>
-
-      {/* Menu Lateral */}
-      <nav className={`side-menu ${menuAtivo ? "active" : ""}`} id="sideMenu">
-        <ul>
-          <li><a href="campeonatos.html">Jogos</a></li>
-          <li><a href="partidas.html">Partidas</a></li>
-          <li><a href="#">Estatísticas</a></li>
-        </ul>
-      </nav>
-
       {/* Layout principal */}
-      <div className="layout">
-        <header className="header">
-          <h1 className="title">CLASSIFICAÇÃO</h1>
+      <div className={styles.layout}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>CLASSIFICAÇÃO</h1>
         </header>
 
-        <main className="content">
+        <main className={styles.content}>
           {/* Tabela de resultados */}
-          <section className="match-results">
+          <section className={styles["match-results"]}>
             <table>
               <thead>
                 <tr>
@@ -58,8 +34,10 @@ export default function Classificacao() {
           </section>
 
           {/* Tabela de pontuação */}
-          <section className="total-score">
-            <h2 className="score-title">PONTUAÇÃO TOTAL</h2>
+
+
+          <section className={styles["total-score"]}>
+            <h2 className={styles["score-title"]}>PPONTUAÇÃO TOTAL</h2>
             <table>
               <thead>
                 <tr><th>EQUIPE</th><th>J</th><th>V</th><th>E</th><th>D</th></tr>

@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-
 /* Reset */
 * {
   margin: 0;
@@ -10,47 +9,126 @@
 
 /* Layout geral */
 .layout {
-  height: 100vh;
-  /* limita altura ao tamanho da tela */
-  overflow-y: auto;
-  /* permite scroll interno */
-  padding: 100px 20px 40px;
-  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-sizing: border-box;
+  font-family: 'Bebas Neue', sans-serif;
 }
-
 
 /* Título principal */
 .title {
-  font-size: 2.5rem;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 40px;
+  color: #fff;
   text-shadow: 1px 1px 8px black;
+  font-size: 2.5rem;
 }
 
 /* Conteúdo */
 .content {
+  padding: 2rem;
   width: 100%;
+  max-width: 900px;
 }
 
-/* Estilo base para blocos com tabela */
-.match-results,
-.total-score {
-  background-color: rgba(0, 0, 0, 0.7);
+/* -------- Tabela de Resultados (match-results) -------- */
+.match-results {
+  width: 100%;
+  margin-bottom: 2rem;
   border: 3px solid #FFD700;
-  border-radius: 16px;
-  padding: 22px;
-  max-width: 1000px;
-  margin: 0 auto 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.7);
   box-shadow:
     0 0 25px rgba(255, 215, 0, 0.3),
     inset 0 0 10px rgba(255, 215, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 1.5rem;
 }
+
+
+.match-results table {
+  border-collapse: collapse;
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100% !important;
+  min-width: 100px !important;
+  min-height: 100px !important;
+  table-layout: fixed;
+  overflow: hidden;
+  padding: 10rem;
+  border-radius: 12px;
+}
+
+.match-results th,
+.match-results td {
+  text-align: left;
+  color: #fff;
+  padding: 1rem;
+  /* Margem interna */
+  /* Sem bordas internas */
+}
+
+.match-results th {
+  color: #f0c000;
+  text-transform: uppercase;
+}
+
+.match-results tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* -------- Tabela de Classificação (total-score) -------- */
+.total-score {
+  width: 100%;
+  margin-bottom: 2rem;
+  border: 3px solid #FFD700;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.7);
+  box-shadow:
+    0 0 25px rgba(255, 215, 0, 0.3),
+    inset 0 0 10px rgba(255, 215, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 1.5rem;
+}
+
+.score-title {
+  font-weight: bold;
+  text-align: left;
+  color: #fff;
+  text-shadow: none;
+  font-size: 1.2rem;
+}
+
+.total-score table {
+  border-collapse: collapse;
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100% !important;
+  min-width: 100px !important;
+  min-height: 100px !important;
+  table-layout: fixed;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.total-score th,
+.total-score td {
+  text-align: left;
+  color: #fff;
+  padding: 1rem;
+  /* Margem interna */
+  /* Sem bordas internas */
+}
+
+.total-score th {
+  color: #FFD700;
+  text-transform: uppercase;
+}
+
+.total-score tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
 
 .match-results:hover,
 .total-score:hover {
@@ -58,47 +136,4 @@
   box-shadow:
     0 0 35px rgba(255, 215, 0, 0.5),
     inset 0 0 12px rgba(255, 215, 0, 0.15);
-}
-
-/* Títulos */
-.score-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-align: left;
-  color: #fff;
-}
-
-/* Tabelas */
-.match-results table,
-.total-score table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
-  overflow: hidden;
-  border-spacing: 0;
-}
-
-.match-results th,
-.match-results td,
-.total-score th,
-.total-score td {
-  padding: 2px 8px;
-  line-height: 0.5;
-  font-size: 0.85rem;
-  text-align: left;
-  color: #fff;
-}
-
-.match-results th,
-.total-score th {
-  color: #FFD700;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-}
-
-.match-results tbody tr:nth-child(even),
-.total-score tbody tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.05);
 }

@@ -4,12 +4,6 @@ import styles from './Partidas.module.css';
 export default function PartidasPage() {
   return (
     <>
-      <nav className={styles.navbar}>
-        <div className={styles.logo}>FÚRIA E-SPORTS</div>
-        <ul className={styles.menu}>
-          <li><a href="campeonatos.html">JOGOS</a></li>
-        </ul>
-      </nav>
 
       <main className={styles.mainContainer}>
         <section className={styles.formContainer}>

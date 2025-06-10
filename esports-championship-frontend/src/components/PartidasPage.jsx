@@ -1,7 +1,11 @@
 import React from 'react';
 import styles from './Partidas.module.css';
+import TournamentBracket from './TournamentBracket';
+import { useNavigate } from 'react-router-dom';
 
 export default function PartidasPage() {
+  const navigate = useNavigate(); // Hook de navegação
+
   const campeonato = {
     nome: 'Campeonato Nacional',
     andamento: 'Inscrições abertas',
@@ -23,7 +27,12 @@ export default function PartidasPage() {
                 </div>
 
                 {campeonato.andamento === 'Inscrições abertas' && (
-                  <button className={styles['inscrever-button']}>Inscrever-se</button>
+                  <button
+                    className={styles['inscrever-button']}
+                    onClick={() => navigate('/inscricao')}
+                  >
+                    Inscrever-se
+                  </button>
                 )}
               </div>
 
@@ -36,10 +45,8 @@ export default function PartidasPage() {
                 </p>
               </div>
 
-
               <div className={styles.partidasDivider}></div>
               <h1 className={styles.partidasTitle}>Partidas</h1>
-
 
               {/* Em breve */}
               <div className={styles.inscricoesabertas}>
@@ -92,6 +99,12 @@ export default function PartidasPage() {
                   ))}
                 </div>
               </div>
+
+              {/* Chaveamento visual */}
+              <div className={styles.partidasDivider}></div>
+              <h1 className={styles.partidasTitle}>Chaveamento</h1>
+              <TournamentBracket />
+
             </main>
           </div>
         </section>

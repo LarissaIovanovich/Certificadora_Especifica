@@ -32,14 +32,7 @@ img {
   min-width: 200px !important;
 }
 
-/* Barra superior com logo e menu */
-.navbar {
-  background-color: black;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+
 
 .logo {
   font-size: 1.5rem;

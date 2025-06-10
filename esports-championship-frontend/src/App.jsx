@@ -14,7 +14,6 @@ function App() {
       <Routes>
         <Route path="/cadastro" element={<CadastroEquipePage />} />
         <Route path="/campeonatos" element={<CampeonatosPage />} />
-        <Route path="/classificacao" element={<ClassificacaoPage />} />
         <Route path="/inscricao" element={<InscricaoPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signin" element={<SignInPage />} />

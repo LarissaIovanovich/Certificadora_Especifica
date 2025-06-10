@@ -4,8 +4,6 @@ import { login } from "../services/api";
 import imgArte from '../assets/IMG.jpg';
 import { FaUser, FaLock } from "react-icons/fa";
 
-
-
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +31,7 @@ export default function LoginPage() {
 
   return (
     <div className="login-page-wrapper">
-      <div className="background-overlay" />
+      <div className="background-overlay"/>
       <div className="main-container">
         <div className="login-container">
           <h1 className="title">ATLÉTICA FÚRIA UTFPR</h1>

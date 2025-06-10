@@ -1,29 +1,34 @@
-import React from "react";
-import "./Inscricao.module.css";
+import React, { useState } from "react";
+import styles from "./Inscricao.module.css";
 
 const InscricaoPage = () => {
+  const [regulamentoAceito, setRegulamentoAceito] = useState(false);
+  const [dadosConfirmados, setDadosConfirmados] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (regulamentoAceito && dadosConfirmados) {
+      alert("Inscrição confirmada com sucesso!");
+      // Aqui entraria a lógica de envio para a API
+    }
+  };
+
   return (
-    <div>
-      <nav className="navbar">
-        <div className="logo">FÚRIA E-SPORTS</div>
-        <ul className="menu">
-          <li><a href="/campeonatos">JOGOS</a></li>
-        </ul>
-      </nav>
-
-      <div className="main-container">
-        <div className="form-container">
-          <h1>Confirmação de Inscrição</h1>
-
-          <form>
+    <div className={styles.pageWrapper}>
+      <div className={styles.mainContainer}>
+        <div className={styles.loginContainer}>
+          <h1 className={styles.title}>Confirmação de Inscrição</h1>
+          <form onSubmit={handleSubmit}>
             <fieldset>
               <legend>Dados do Torneio</legend>
               <ul>
                 <li>Nome: Torneio Quebrados</li>
-                <li>Data: 20/08/2025</li>
-                <li>Hora: 20:00</li>
-                <li>Jogo: Valorant</li>
+                <li>Data do primeiro dia: 20/08/2025 às 20:00</li>
+                <li>Total de Times: 16</li>
                 <li>Vagas disponíveis: 2</li>
+                <li>Data de inscrição: até 18/08/2025</li>
+                <li>Jogo: Valorant</li>
+                <li>Descrição: Série de partidas jogadas em diferentes mapas por diferentes times</li>
               </ul>
             </fieldset>
 
@@ -34,23 +39,43 @@ const InscricaoPage = () => {
 
             <fieldset>
               <legend>Integrantes</legend>
-              <ul id="resumoIntegrantes">
-                <li>Tony Stark</li>
-                <li>Steve Rogers</li>
-                <li>Natasha Romanoff</li>
-                <li>Bruce Banner</li>
+              <ul>
+                <li>Tony Stark — IronMan</li>
+                <li>Steve Rogers — Capitão</li>
+                <li>Natasha Romanoff — BlackWidow</li>
+                <li>Bruce Banner — HulkSmash</li>
               </ul>
             </fieldset>
 
             <fieldset>
-              <legend>Regulamento</legend>
+              <legend>Confirmações</legend>
               <label>
-                <input type="checkbox" id="aceite" required />
-                Declaro que li e aceito o regulamento do torneio.
+                <input
+                  type="checkbox"
+                  checked={regulamentoAceito}
+                  onChange={() => setRegulamentoAceito(!regulamentoAceito)}
+                  required
+                />
+                Li e aceito o regulamento do torneio.
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={dadosConfirmados}
+                  onChange={() => setDadosConfirmados(!dadosConfirmados)}
+                  required
+                />
+                Confirmo que os dados da equipe estão corretos.
               </label>
             </fieldset>
 
-            <button type="submit" className="btn-submit">Inscrever Equipe</button>
+            <button
+              type="submit"
+              className={styles.btnSubmit}
+              disabled={!regulamentoAceito || !dadosConfirmados}
+            >
+              Inscrever Equipe
+            </button>
           </form>
         </div>
       </div>

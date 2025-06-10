@@ -37,7 +37,7 @@ export default function Classificacao() {
 
 
           <section className={styles["total-score"]}>
-            <h2 className={styles["score-title"]}>PPONTUAÇÃO TOTAL</h2>
+            <h2 className={styles["score-title"]}>PONTUAÇÃO TOTAL</h2>
             <table>
               <thead>
                 <tr><th>EQUIPE</th><th>J</th><th>V</th><th>E</th><th>D</th></tr>

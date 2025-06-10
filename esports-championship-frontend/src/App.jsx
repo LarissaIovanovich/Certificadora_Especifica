@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CadastroEquipePage from './components/CadastroEquipe';
 import CampeonatosPage from './components/CampeonatosPage';
-import ClassificacaoPage from './components/ClassificacaoPage';
 import InscricaoPage from './components/InscricaoPage';
 import LoginPage from './components/LoginPage';
 import SignInPage from './components/SignInPage';

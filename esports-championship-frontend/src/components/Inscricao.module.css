@@ -1,168 +1,175 @@
-/* Animação que proporciona transição suave de opacidade e posição vertical ao carregar o conteúdo */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+* {
+  font-family: 'Bebas Neue', sans-serif;
+  text-transform: uppercase;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background-image: url('../assets/fundo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: -1;
+}
+
+.pageWrapper {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.mainContainer {
+  opacity: 0;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 760px;
+  height: auto;
+  background-color: #121212;
+  position: relative;
+  z-index: 2;
+  animation-name: fadeInPage, glowPulse;
+  animation-duration: 0.5s, 4s;
+  animation-timing-function: ease-out, ease-in-out;
+  animation-fill-mode: forwards, forwards;
+  animation-delay: 0.2s, 0s;
+  animation-iteration-count: 1, infinite;
+  padding: 32px;
+}
+
 @keyframes fadeInPage {
-  from {
+  0% {
     opacity: 0;
     transform: translateY(10px);
   }
-  to {
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Redefinição dos principais padrões de espaçamento e modelo de caixa para garantir consistência visual */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(245, 196, 0, 0.3), 0 10px 25px rgba(0, 0, 0, 0.9);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(245, 196, 0, 1), 0 15px 35px rgba(0, 0, 0, 0.9);
+  }
 }
 
-/* Área superior fixa contendo logotipo e menu de navegação */
-.navbar {
-  background-color: black;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Logotipo ou nome da plataforma em destaque no cabeçalho */
-.logo {
-  font-size: 1.5rem;
-  letter-spacing: 2px;
-}
-
-/* Lista de navegação superior horizontal, sem marcadores e com espaçamento entre os itens */
-.menu {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-}
-
-.menu li a {
-  color: white;
-  font-size: 0.875rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-/* Realce visual ao passar o cursor sobre os itens do menu */
-.menu li a:hover {
-  text-decoration: underline;
-}
-
-/* Área principal com centralização de conteúdo e animação de entrada */
-.main-container {
+.loginContainer {
   flex-grow: 1;
   display: flex;
-  padding: 2rem;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  animation: fadeInPage 0.5s ease-out 0.2s forwards;
-}
-
-/* Estrutura do formulário com fundo escuro, contorno amarelo e espaçamento interno confortável */
-.form-container {
-  background-color: #0a0a0a;
-  padding: 2rem;
-  max-width: 550px;
+  flex-direction: column;
+  padding: 24px;
+  color: #ffffff;
   width: 100%;
-  border-radius: 1rem;
-  box-shadow: 0 0 15px 2px #facc15;
 }
 
-/* Título centralizado com espaçamento inferior e ajuste de tipografia */
-.form-container h1 {
-  text-align: center;
-  margin-bottom: 2rem;
+.title {
+  color: #f5c400;
+  font-size: 32px;
+  margin-bottom: 12px;
   letter-spacing: 2px;
-  font-size: 1.5rem;
 }
 
-/* Organização vertical dos campos do formulário com espaçamento padronizado */
 form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  font-size: 1rem;
-  letter-spacing: 1px;
+  gap: 24px;
 }
 
-/* Agrupamento visual de campos relacionados, delimitado por borda e cantos arredondados */
 fieldset {
-  border: 1px solid #facc15;
-  padding: 1rem;
-  border-radius: 0.75rem;
-  box-shadow: none;
+  border: 2px solid #f5c400;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
 }
 
-/* Título do agrupamento com destaque na cor e em caixa alta */
 legend {
-  font-size: 1rem;
-  padding: 0 0.5rem;
-  color: #facc15;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  color: #f5c400;
+  font-size: 18px;
+  padding: 0 8px;
 }
 
-/* Rótulos dos campos com alinhamento horizontal e espaçamento interno */
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 8px;
+}
+
+ul li {
+  margin-bottom: 4px;
+  font-size: 16px;
+  color: #fff;
+}
+
+p {
+  font-size: 16px;
+  color: #fff;
+  margin-top: 8px;
+}
+
 label {
+  font-size: 16px;
+  color: #ffffff;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-/* Caixas de seleção aumentadas e estilizadas para melhor usabilidade e contraste */
 input[type="checkbox"] {
-  transform: scale(1.2);
-  accent-color: #facc15;
+  width: 18px;
+  height: 18px;
+  accent-color: #f5c400;
   cursor: pointer;
 }
 
-/* Nome da equipe destacado em negrito e cor temática */
-#resumoNomeEquipe {
-  color: #facc15;
-  font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Lista de integrantes com marcadores e recuo alinhado à hierarquia do conteúdo */
-ul#resumoIntegrantes {
-  list-style: disc;
-  margin-left: 1.5rem;
-  font-size: 0.75rem;
-}
-
-/* Botão de envio com estilo arredondado, tipografia em caixa alta e efeito visual de destaque ao interagir */
-.btn-submit {
-  background-color: #facc15;
-  color: black;
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.btnSubmit {
+  padding: 12px 20px;
+  background-color: #f5c400;
+  color: #000000;
   border: none;
-  transition: background 0.3s, box-shadow 0.3s;
-  align-self: flex-end;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s, transform 0.2s;
+  font-size: 18px;
 }
 
-/* Efeito luminoso suave ao passar o mouse sobre o botão, para indicar interatividade */
-.btn-submit:hover {
-  box-shadow: 0 0 10px #facc15, 0 0 20px #facc15;
+.btnSubmit:hover {
+  background-color: #ffd700;
+  transform: scale(1.02);
 }
 
-
-
-
-
-
-
+.btnSubmit:disabled {
+  background-color: #999;
+  color: #333;
+  cursor: not-allowed;
+}

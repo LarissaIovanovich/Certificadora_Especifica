@@ -96,12 +96,6 @@ const CadastroEquipe = () => {
 
   return (
     <div>
-      <nav className="navbar">
-        <div className="logo">FÚRIA E-SPORTS</div>
-        <ul className="menu">
-          <li><a href="/campeonatos">JOGOS</a></li>
-        </ul>
-      </nav>
 
       <main className="main-container">
         <section className="form-container">

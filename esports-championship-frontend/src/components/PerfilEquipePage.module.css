@@ -1,0 +1,96 @@
+.pageContainer {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 2rem;
+  color: #fff;
+}
+
+.loading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: #facc15;
+  text-align: center;
+  margin-top: 5rem;
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #facc1544;
+}
+
+.profileLogo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  background-color: #111;
+  border-radius: 12px;
+  padding: 0.5rem;
+  border: 2px solid #facc1588;
+}
+
+.headerInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.teamName {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  letter-spacing: 2px;
+  color: #facc15;
+  margin: 0;
+  line-height: 1;
+}
+
+.teamTag {
+  font-size: 1.5rem;
+  color: #aaa;
+  margin-top: 0.5rem;
+}
+
+.playersSection {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  color: #facc15;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #facc1544;
+}
+
+.playersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.playerCard {
+  background-color: #181818;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid #333;
+}
+
+.playerNickname {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 0.25rem 0;
+}
+
+.playerPosition {
+  color: #facc15;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  margin: 0;
+}

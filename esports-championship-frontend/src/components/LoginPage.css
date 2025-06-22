@@ -1,26 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-@keyframes fadeInPage {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Bebas Neue', sans-serif;
-  text-transform: uppercase;
 }
 
 body {
+  font-family: 'Bebas Neue', sans-serif;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -29,10 +17,8 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: transparent;
   position: relative;
-  z-index: 0;
-  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -43,59 +29,36 @@ body::before {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  /* Fundo escurecido */
   z-index: -1;
 }
 
-.login-page-wrapper {
-  position: relative;
-}
-
-.background-overlay {
-  position: fixed;
-  pointer-events: auto;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  /* Corrigido: preencher a viewport */
-  height: 100vh;
-  /* Corrigido: preencher a viewport */
-  background-color: rgba(0, 0, 0, 0.10);
-  z-index: 1;
-}
 
 .main-container {
-  opacity: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; 
   border-radius: 12px;
   overflow: hidden;
-  width: 760px;
-  height: 600px;
   position: relative;
   z-index: 2;
-  animation-name: fadeInPage, glowPulse;
-  animation-duration: 0.5s, 4s;
-  animation-timing-function: ease-out, ease-in-out;
-  animation-fill-mode: forwards, forwards;
-  /* Mantém estado final das duas animações */
-  animation-delay: 0.2s, 0s;
-  animation-iteration-count: 1, infinite;
+  width: 90%;
+  max-width: 960px; 
+  min-height: 600px;
+  animation: fadeInPage 0.5s 0.2s ease-out forwards, glowPulse 4s infinite ease-in-out;
+}
+
+@keyframes fadeInPage {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes glowPulse {
-
-  0%,
-  100% {
-    box-shadow: 0 0 8px rgba(245, 196, 0, 0.3), 0 10px 25px rgba(0, 0, 0, 0.9);
-  }
-
-  50% {
-    box-shadow: 0 0 25px rgba(245, 196, 0, 1), 0 15px 35px rgba(0, 0, 0, 0.9);
-  }
+  0%, 100% { box-shadow: 0 0 8px rgba(245, 196, 0, 0.3), 0 10px 25px rgba(0, 0, 0, 0.9); }
+  50% { box-shadow: 0 0 25px rgba(245, 196, 0, 1), 0 15px 35px rgba(0, 0, 0, 0.9); }
 }
 
+
 .login-container {
+  min-width: 320px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -104,6 +67,19 @@ body::before {
   padding: 40px;
   background-color: #121212;
 }
+
+.image-container {
+  min-width: 320px;
+  flex-grow: 1;
+  display: flex;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 
 .title {
   color: #f5c400;
@@ -119,17 +95,17 @@ body::before {
 
 form {
   width: 100%;
-  /* ocupa 100% do container pai */
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-
 .input-group {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
+  max-width: 350px;
 }
 
 .input-group svg {
@@ -138,19 +114,21 @@ form {
   top: 50%;
   transform: translateY(-50%);
   color: #f5c400;
-  pointer-events: none;
+  text-transform: uppercase;
 }
 
-input {
-  background-color: #1a1a1a !important;
-  color: #ffffff !important;
+.input-group input {
+  background-color: #1a1a1a;
+  color: #ffffff;
   border: 2px solid #f5c400;
   border-radius: 4px;
   padding-left: 40px;
   transition: border-color 0.3s, background-color 0.3s;
+  width: 100%;
+  height: 48px;
 }
 
-button {
+button[type="submit"] {
   padding: 12px 20px;
   background-color: #f5c400;
   color: #000000;
@@ -159,66 +137,50 @@ button {
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-}
-
-input,
-button {
-  width: 80%;
+  width: 100%;
+  max-width: 350px;
   height: 48px;
-  /* altura padrão, ajuste se quiser maior/menor */
-  box-sizing: border-box;
 }
 
-button:hover {
+button[type="submit"]:hover {
   background-color: #ffd700;
   transform: scale(1.02);
 }
 
-#loginMessage {
+.login-message-feedback {
   font-weight: bold;
-  animation: fadeIn 0.3s ease-in-out;
+  height: 20px;
+  margin-top: 1rem;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
+.signup-link {
+  margin-top: 1.5rem;
+  color: #aaa;
+  font-size: 0.9rem;
+  text-align: left;
+  width: 100%;
+  max-width: 350px;
+}
+
+.signup-link a {
+  color: #f5c400;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* --- REGRAS PARA TELAS MAIORES --- */
+@media (min-width: 768px) {
+  .main-container {
+    display: grid;
+    grid-template-columns: 60% 40%; 
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .login-container,
+  .image-container {
+    min-width: 0;
   }
-}
-
-.image-container {
-  flex: 1;
-  min-width: 45%;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-}
-
-
-.image-container img {
-  width: auto;
-  height: 100%;
-  max-width: none !important;
-  object-fit: cover;
-  display: block;
-}
-
-
-
-input[type="email"],
-input[type="text"],
-input[type="password"] {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border: 2px solid #f5c400 !important;
-  border-radius: 4px !important;
-  padding-left: 40px !important;
-  box-sizing: border-box !important;
-  width: 80% !important;
-  height: 48px !important;
 }

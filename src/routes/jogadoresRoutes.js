@@ -7,4 +7,5 @@ router.get('/', jogadoresController.list);
 router.put('/:id', jogadoresController.edit);
 router.get('/:id', jogadoresController.getById);
 
+
 module.exports = router;

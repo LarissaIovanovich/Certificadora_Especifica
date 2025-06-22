@@ -1,0 +1,920 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+/* VERSÃO CORRIGIDA */
+body, html, #root {
+  width: 100%; /* Usa 100% do elemento pai, que se ajusta corretamente */
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* ... suas outras regras de body ... */
+  overflow-x: hidden; /* Garante que nada "vaze" para os lados, escondendo a rolagem horizontal */
+}
+
+body {
+  font-family: 'Bebas Neue', sans-serif;
+  background-image: url('../assets/fundo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  min-height: 100vh;
+}
+
+.navbar {
+  background-color: black;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+}
+
+.menu {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.menu li a {
+  color: white;
+  font-size: 0.875rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.menu li a:hover {
+  text-decoration: underline;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 90vh;
+  margin: 0 auto;
+}
+
+.bracketSection {
+  background: rgba(0,0,0,0.85);
+  border-radius: 20px;
+  /* Reduza a intensidade das sombras douradas */
+  box-shadow: 0 0 8px #facc1533, 0 0 16px #facc1544;
+  padding: 2rem 2.5rem;
+  width: 100%;
+  max-width: 1600px;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
+  color: #facc15;
+  text-shadow: 1px 1px 8px black;
+}
+
+.doubleBracketTree {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;                /* diminui o espaço entre as chaves */
+  min-width: 900px;         /* diminui largura mínima */
+  overflow-x: auto;
+  padding: 0.5rem 0.2rem;   /* padding menor */
+  margin: 0 auto;           /* centraliza horizontalmente */
+}
+
+.bracketTree {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;                /* diminui o espaço entre rounds */
+  align-items: center;
+}
+
+.roundColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem; /* aumente este valor para mais espaço vertical */
+  min-width: 60px;
+  position: relative;
+}
+
+.roundTitle {
+  color: #facc15;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-shadow: 1px 1px 8px black;
+  font-weight: bold;
+}
+
+/* Encontre a regra .matchBox e substitua por esta */
+.matchBox {
+  background: #181818;
+  border: 2px solid #facc1588;
+  border-radius: 6px;
+  padding: 0.4rem; /* Um pouco mais de padding vertical */
+  min-width: 120px; /* Aumentar a largura mínima para nomes mais longos */
+  min-height: 45px; /* Altura ajustada para o layout vertical */
+  font-size: 0.75rem;
+  margin: 0.3rem 0;
+  box-shadow: 0 0 2px #facc1522;
+  
+  /* A MUDANÇA PRINCIPAL: de 'row' para 'column' */
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center; /* Centraliza verticalmente */
+  gap: 0; /* Removemos o gap para controlar com padding/margin */
+  position: relative;
+  z-index: 2;
+}
+
+/* Adicione estas novas regras para estilizar os times dentro do box */
+.matchBox .teamInline {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.2rem 0;
+}
+
+/* Adiciona uma linha separadora abaixo do primeiro time */
+.matchBox .teamInline:first-of-type {
+  border-bottom: 1px solid #facc1544; /* Linha dourada bem sutil */
+}
+
+/* Linha vertical entre dois cards de confronto (fora do card) */
+.roundColumn .matchBox {
+  position: relative;
+}
+
+
+
+/* Remove a linha do último card se for ímpar */
+.roundColumn .matchBox:last-child::after {
+  display: none;
+}
+
+/* Remove todas as linhas entre rounds (essas regras não são mais necessárias) */
+.roundColumn:not(:last-child) .matchBox:nth-child(2n)::before,
+.bracketTree.right .roundColumn:not(:last-child) .matchBox:nth-child(2n)::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Final central */
+.finalColumn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.finalMatchBox {
+  background: #181818;
+  border: 3px solid #facc1588; /* Dourado com transparência */
+  border-radius: 10px;
+  padding: 0.5rem 0.7rem;
+  min-width: 60px;
+  min-height: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 3px #facc1522;
+  font-weight: bold;
+  color: #facc15;
+  font-size: 0.85rem;
+}
+
+/* Espelha a direção das linhas da chave da direita */
+.bracketTree.right .roundColumn:not(:last-child) .matchBox:nth-child(2n)::before {
+  left: auto;
+  right: 100%;
+  width: 2px;
+  height: 60%;
+  top: -30%;
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .doubleBracketTree {
+    min-width: 600px;
+    gap: 0.5rem;
+  }
+  .bracketTree {
+    gap: 0.5rem;
+  }
+  .roundColumn {
+    min-width: 40px;
+    gap: 0.4rem;
+  }
+  .matchBox {
+    min-width: 40px;
+    min-height: 16px;
+    font-size: 0.65rem;
+    padding: 0.1rem 0.2rem;
+  }
+  .finalMatchBox {
+    min-width: 40px;
+    min-height: 16px;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+.campeonatoHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  background: rgb(0, 0, 0);
+  border-radius: 18px;
+  box-shadow: 0 0 12px #facc1522;
+  border: 2px solid #facc1588;
+  padding: 2rem 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.campeonatoHeaderHorizontal {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  background: rgb(0, 0, 0);
+  border-radius: 18px;
+  box-shadow: 0 0 12px #facc1522;
+  border: 2px solid #facc1588;
+  padding: 2rem 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.headerImageBox {
+  flex-shrink: 0;
+  width: 180px;
+  height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 3px solid #facc1588;
+  box-shadow: 0 0 12px #facc1533;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerImageBoxMinimal {
+  flex-shrink: 0;
+  width: 200px;     
+  height: 200px;     
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid #facc1588;
+  box-shadow: 0 0 8px #facc1533;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.campeonatoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.headerInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.headerInfoHorizontal {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* alinhamento à esquerda */
+  margin-left: 2rem;
+  gap: 0.7rem;
+}
+
+.campeonatoNome {
+  color: #facc15;
+  font-size: 2.2rem;
+  margin: 0 0 0.3rem 0;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 8px black;
+  text-align: center;
+}
+
+.campeonatoDescricao {
+  color: #fff;
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.premiacaoBox {
+  display: flex;
+  align-items: center;
+  background: #222;
+  border: 2px solid #facc1588;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  width: fit-content;
+  box-shadow: 0 0 6px #facc1522;
+  gap: 0.7rem;
+}
+
+.premiacaoMinimal {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #facc15;
+  font-size: 1rem;
+  font-weight: 500;
+  justify-content: center;
+}
+
+.trofeuIcon {
+  font-size: 1.7rem;
+  filter: drop-shadow(0 0 4px #facc15aa);
+}
+
+.trofeuIcon {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 2px #facc15aa);
+}
+
+.timelineCard {
+  background: #181818;
+  border: 2px solid #facc1588;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 0 8px #facc1511;
+  color: #fff;
+  width: fit-content;
+}
+
+.timelineTitle {
+  color: #facc15;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1px;
+}
+
+.timelineList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.timelineList li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.2rem;
+  font-size: 1rem;
+  background: #222;
+  border-radius: 6px;
+  padding: 0.4rem 0.7rem;
+  border-left: 4px solid #facc15;
+  box-shadow: 0 0 4px #facc1511;
+}
+
+.timelineHorizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 0.7rem;
+  margin-bottom: 0.5rem;
+  gap: 0.7rem;
+}
+
+.timelineItemHorizontal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.timelineIconHorizontal {
+  width: 1rem;
+  height: 1rem;
+  background: #181818;
+  border: 2px solid #facc15;
+  border-radius: 50%;
+  color: #facc15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+  z-index: 1;
+  box-shadow: 0 0 4px #facc1533;
+}
+
+.timelineTextHorizontal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timelineLabelMinimal {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0.1rem;
+  text-align: center;
+}
+
+.timelineDateMinimal {
+  color: #facc15;
+  font-size: 0.rem;
+  font-weight: 400;
+  text-align: center;
+}
+
+.timelineLineHorizontal {
+  position: absolute;
+  top: 0.85rem;
+  left: 80%;
+  width: 2.2rem;
+  height: 1px;
+  background: linear-gradient(to right, #facc15 60%, transparent 100%);
+  z-index: 0;
+}
+
+.teamsInfoBox {
+  display: flex;
+  justify-content: flex-start; /* Alinha à esquerda */
+  margin-bottom: 1.2rem;
+  width: 100%;
+}
+
+.teamsButton {
+  position: relative;
+  background: transparent;
+  color: #facc15;
+  border: none;
+  border-radius: 4px;
+  padding: 0.1em 0.7em;
+  font-size: 0.85em;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: none;
+  outline: none;
+  opacity: 0.7;
+  min-width: 90px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.teamsButton:hover,
+.teamsButton:focus {
+  background: #222;
+  color: #fff;
+  opacity: 1;
+}
+
+.teamsDropdown {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 110%;
+  min-width: 120px;
+  background: #181818;
+  border: 1px solid #facc1544;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px #00000022;
+  z-index: 9999; /* valor alto para garantir sobreposição */
+  padding: 0.2em 0;
+  align-items: flex-start;
+}
+
+.teamsButton:hover .teamsDropdown,
+.teamsButton:focus .teamsDropdown {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.teamsDropdownItem {
+  color: #fff;
+  padding: 0.18em 0.8em;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85em;
+  text-align: left;
+  transition: background 0.2s;
+  border-radius: 3px;
+  width: 100%;
+}
+
+.teamsDropdownItem:hover {
+  background: #222;
+  color: #facc15;
+}
+
+.campeonatoNome,
+.campeonatoDescricao {
+  text-align: left;
+  width: 100%;
+}
+
+.topNav {
+  /* Propriedades de posicionamento corrigidas */
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0; /* Garante que ele se estique até o final da direita */
+  width: auto; /* Deixa o navegador calcular a largura correta baseada no left/right */
+  z-index: 100;
+
+  /* Estilos visuais mantidos */
+  background: #181818;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.2rem 2.5rem;
+  border-bottom: 2px solid #facc1588;
+  box-sizing: border-box;
+}
+
+.topNavLink {
+  color: #facc15;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.15rem;
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+  padding: 0.2em 0.7em;
+  border-radius: 4px;
+}
+
+.topNavLink:hover {
+  color: #fff;
+  background: #222;
+}
+
+.navAuthBox {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.userIcon {
+  color: #facc15;
+  font-size: 1.5rem;
+}
+
+.authLink {
+  color: #facc15;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  text-decoration: none;
+  letter-spacing: 1px;
+  padding: 0.2em 0.7em;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.authLink:hover {
+  color: #fff;
+  background: #222;
+}
+
+.campeonatoHeaderHorizontal,
+.campeonatoHeaderMinimal {
+  margin-top: 2.5rem; 
+}
+
+.showTeamsButton {
+  margin: 2rem auto 1rem auto;
+  display: block;
+  background: #181818;
+  color: #facc15;
+  border: 1px solid #facc1588;
+  border-radius: 6px;
+  padding: 0.5em 1.5em;
+  font-size: 1em;
+  font-family: 'Bebas Neue', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  opacity: 0.8;
+}
+.showTeamsButton:hover {
+  background: #222;
+  color: #fff;
+  opacity: 1;
+}
+
+.teamsCardsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.teamCard {
+  background: #181818;
+  border: 2px solid #facc1588;
+  border-radius: 12px;
+  box-shadow: 0 0 8px #facc1533;
+  padding: 1.2rem 1.5rem;
+  min-width: 220px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.teamImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #facc15;
+  margin-bottom: 0.7rem;
+}
+
+.teamImageRect {
+  width: 120px;     
+  height: 90px;     
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #facc15;
+  margin-bottom: 0.7rem;
+  background: #111;
+  box-shadow: 0 0 6px #facc1533;
+}
+
+.teamName {
+  color: #facc15;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-family: 'Bebas Neue', sans-serif;
+  text-align: center;
+}
+
+.playersList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  font-size: 0.98em;
+  width: 100%;
+}
+
+.playerItem {
+  padding: 0.2em 0;
+  border-bottom: 1px solid #222;
+}
+.playerItem:last-child {
+  border-bottom: none;
+}
+
+.twitchContainer {
+  margin: 2.5rem auto 2rem auto;
+  background: #000000;
+  border: 2px solid #facc1588;
+  border-radius: 12px;
+  box-shadow: 0 0 8px #facc1533;
+  padding: 1.5rem 2rem;
+  max-width: 1600px; 
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.twitchTitle {
+  color: #facc15;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.twitchEmbedWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+
+
+.teamsCardsContainer {
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 1.5rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 1600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  
+
+  max-height: 650px; 
+  overflow-y: auto; 
+}
+
+/* Garante que o estilo da logo seja aplicado corretamente */
+.teamLogo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #facc15;
+  margin-bottom: 0.7rem;
+  background-color: #111;
+}
+
+/* Garante que o estilo da lista de jogadores seja aplicado */
+.playerList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  font-size: 0.98em;
+  font-family: sans-serif;
+  width: 100%;
+  text-align: center;
+}
+
+.playerList li {
+  padding: 0.4em 0;
+  border-bottom: 1px solid #333;
+}
+.playerList li:last-child {
+  border-bottom: none;
+}
+.playerList li strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+
+.teamsCardsContainer::-webkit-scrollbar-track {
+  background: #181818;
+  border-radius: 10px;
+}
+.teamsCardsContainer::-webkit-scrollbar-thumb {
+  background-color: #facc1588;
+  border-radius: 10px;
+  border: 2px solid #181818;
+}
+
+.teamListContainer {
+  width: 100%;
+  max-width: 1600px; 
+  margin: 2rem auto;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 0 8px #facc1533, 0 0 16px #facc1544;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* A lista em si (ul) */
+.teamList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* O item clicável da lista (o componente Link) */
+.teamListItem {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #ddd;
+  transition: background-color 0.2s, color 0.2s;
+  gap: 1rem;
+}
+
+/* Efeito ao passar o mouse */
+.teamListItem:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+/* A logo da equipe na lista */
+.teamListLogo {
+width: 20px; /* Aumentando a largura /
+height: 50px; / Mantendo ou ligeiramente aumentando a altura */
+border-radius: 6px;
+border: 2px solid #facc1588;
+background-color: #111;
+object-fit: contain;
+padding: 4px;
+flex-shrink: 0;
+}
+
+/* O nome da equipe na lista */
+.teamListName {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+/* A tag da equipe na lista */
+.teamListTag {
+  font-family: sans-serif;
+  font-size: 0.9rem;
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Estilo para a barra de rolagem da lista */
+.teamListContainer::-webkit-scrollbar {
+  width: 8px;
+}
+.teamListContainer::-webkit-scrollbar-track {
+  background: #181818;
+  border-radius: 10px;
+}
+.teamListContainer::-webkit-scrollbar-thumb {
+  background-color: #facc1588;
+  border-radius: 10px;
+}
+/* NOVO CÓDIGO - MAIS DELICADO */
+.expandButton {
+  background: transparent;
+  border: none;
+  color: #888; /* Cor mais suave, um cinza claro */
+  font-size: 0.75rem; /* Tamanho do ícone de seta (▲/▼) bem menor */
+  cursor: pointer;
+  padding: 0; /* Removido para controle preciso com width/height */
+  border-radius: 4px; /* Um quadrado suave em vez de um círculo */
+  width: 24px;   /* Largura bem menor */
+  height: 24px;  /* Altura bem menor */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, transform 0.2s; /* Transição mais suave */
+}
+
+.expandButton:hover {
+  background-color: transparent; /* Garante que não haja fundo no hover */
+  color: #facc15; /* A seta fica dourada e brilhante ao passar o mouse */
+  transform: scale(1.15); /* Efeito de 'zoom' sutil para feedback */
+}
+
+
+/* Container que agrupa o nome e a tag */
+.teamNameContainer {
+  flex-grow: 1; /* Faz este container ocupar o espaço livre entre a logo e o botão */
+  display: flex;
+  align-items: baseline; /* Alinha o nome (grande) e a tag (pequena) pela base do texto */
+}
+
+
+.teamListNameLink {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem; 
+  letter-spacing: 1px;
+  color: #fff; 
+  text-decoration: none; 
+  transition: color 0.2s ease-in-out;
+}
+
+/* Efeito ao passar o mouse sobre o link */
+.teamListNameLink:hover {
+  color: #facc15; 
+  text-decoration: underline; 
+}
+
+/* A tag da equipe, ex: (LOUD) */
+.teamListTag {
+  font-family: sans-serif;
+  font-size: 0.9rem;
+  color: #aaa; 
+  margin-left: 0.5rem;
+}
+.twitchEmbedWrapper iframe {
+  border: none; 
+  border-radius: 8px; 
+}

@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; 
+import { useAuth } from "../contexts/AuthContext"; 
 import "./LoginPage.css";
-import { login } from "../services/api";
 import imgArte from '../assets/IMG.jpg';
 import { FaUser, FaLock } from "react-icons/fa";
 
@@ -8,24 +9,25 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginMessage, setLoginMessage] = useState("");
+  
+  const navigate = useNavigate(); 
+  const { login } = useAuth(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const data = {
-        email: email,
-        senha: password
-      }
-      const response = await login(data);
-      localStorage.setItem('token', response.data.token);
+    setLoginMessage(""); 
 
+    const result = await login(email, password); 
+
+    if (result.success) {
       setLoginMessage("Login realizado com sucesso!");
+      // Redireciona para a página principal ou dashboard
       setTimeout(() => {
-        // window.location.href = "/cadastro";
-      }, 1000);
-    } catch (error) {
-      setLoginMessage("Nome ou senha inválidos. Tente novamente.");
-      console.log(error);
+        navigate("/campeonatos"); 
+      }, 100);
+    } else {
+     
+      setLoginMessage(result.message);
     }
   };
 
@@ -59,8 +61,14 @@ export default function LoginPage() {
             </div>
             <button type="submit">ENTRAR</button>
           </form>
-          <p id="loginMessage" style={{ color: loginMessage === "Login realizado com sucesso!" ? "limegreen" : "#e74c3c" }}>
+          
+          <p id="loginMessage" className="login-message-feedback" style={{ color: loginMessage === "Login realizado com sucesso!" ? "limegreen" : "#e74c3c" }}>
             {loginMessage}
+          </p>
+          
+          {/* Link para a página de cadastro */}
+          <p className="signup-link">
+            Não tem uma conta? <Link to="/signin">Cadastre-se</Link>
           </p>
         </div>
         <div className="image-container">
@@ -70,4 +78,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

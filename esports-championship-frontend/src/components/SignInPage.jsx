@@ -1,31 +1,34 @@
 import { useState } from "react";
-import "./LoginPage.css";
-import { createUser } from '../services/api';
+import "./LoginPage.css"; 
+import { register } from '../services/api';
 import imgArte from '../assets/IMG.jpg';
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-export default function LoginPage() {
-  const [userName, setuserName] = useState("");
+
+export default function SignInPage() { 
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loginMessage, setLoginMessage] = useState("");
+  const [registerMessage, setRegisterMessage] = useState("");
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
+  // MUDANÇA : Lógica do handleSubmit totalmente corrigida
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setRegisterMessage("");
 
     if (!validateEmail(email)) {
-      setLoginMessage("Email inválido.");
+      setRegisterMessage("Formato de e-mail inválido.");
       return;
     }
-
     if (password !== confirmPassword) {
-      setLoginMessage("Senhas diferentes.");
+      setRegisterMessage("As senhas não coincidem.");
       return;
     }
 
@@ -33,15 +36,19 @@ export default function LoginPage() {
       const data = {
         nome_usuario: userName,
         email: email,
-        senha_hash: password
+        senha: password 
       };
-      await createUser(data);
-      setLoginMessage("Cadastro realizado com sucesso!");
+      
+      await register(data); 
+      
+      setRegisterMessage("Cadastro realizado com sucesso! Redirecionando para o login...");
       setTimeout(() => {
-        window.location.href = "/cadastroequipe";
-      }, 1000);
+        window.location.href = "/login";
+      }, 2000);
+
     } catch (error) {
-      setLoginMessage("Erro ao criar conta. Tente novamente.");
+      const errorMessage = error.response?.data?.error || "Erro ao criar conta. Tente novamente.";
+      setRegisterMessage(errorMessage);
       console.log(error);
     }
   };
@@ -57,6 +64,16 @@ export default function LoginPage() {
             <div className="input-group">
               <FaUser />
               <input
+                type="text"
+                placeholder="Nome de usuário"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <FaEnvelope /> {/* Ícone de e-mail */}
+              <input
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -65,20 +82,10 @@ export default function LoginPage() {
               />
             </div>
             <div className="input-group">
-              <FaUser />
-              <input
-                type="text"
-                placeholder="Nome do usuário"
-                value={userName}
-                onChange={(e) => setuserName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="input-group">
               <FaLock />
               <input
                 type="password"
-                placeholder="Senha"
+                placeholder="Senha (mínimo 8 caracteres)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -96,8 +103,13 @@ export default function LoginPage() {
             </div>
             <button type="submit">CRIAR</button>
           </form>
-          <p id="loginMessage" style={{ color: loginMessage === "Cadastro realizado com sucesso!" ? "limegreen" : "#e74c3c" }}>
-            {loginMessage}
+          {/* Mensagem de feedback */}
+          <p className="login-message-feedback" style={{ color: registerMessage.includes("sucesso") ? "limegreen" : "#e74c3c" }}>
+            {registerMessage}
+          </p>
+          {/* Link para voltar para a página de login */}
+          <p className="signup-link">
+            Já tem uma conta? <Link to="/login">Faça Login</Link>
           </p>
         </div>
         <div className="image-container">

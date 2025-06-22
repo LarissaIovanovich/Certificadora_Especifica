@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const jogadoresController = require('../controllers/jogadoresController');
+const { authMiddleware } = require('../middlewares/authMiddleware');
 
-router.post('/', jogadoresController.create);
+router.post('/', authMiddleware, jogadoresController.create);
 router.get('/', jogadoresController.list);
 router.put('/:id', jogadoresController.edit);
 router.get('/:id', jogadoresController.getById);

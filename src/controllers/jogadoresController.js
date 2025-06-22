@@ -5,18 +5,14 @@ const Equipe = require('../models/Equipe');
 module.exports = {
   async create(req, res) {
     try {
-      const { usuario_id, equipe_id, apelido, riot_id, tag_line, posicao } = req.body;
+      const usuario_id = req.user.id;
+      const { apelido, riot_id, tag_line, posicao } = req.body;
 
       // valida se usuário existe
       const usuario = await Usuario.findByPk(usuario_id);
+
       if (!usuario) {
         return res.status(404).json({ error: 'Usuário não encontrado' });
-      }
-
-      // valida se equipe existe
-      const equipe = await Equipe.findByPk(equipe_id);
-      if (!equipe) {
-        return res.status(404).json({ error: 'Equipe não encontrada' });
       }
 
       // verifica se já existe um jogador com este usuario_id
@@ -33,7 +29,6 @@ module.exports = {
 
       const novoJogador = await Jogador.create({
         usuario_id,
-        equipe_id,
         apelido,
         riot_id,
         tag_line,

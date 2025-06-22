@@ -29,7 +29,7 @@ const Jogador = sequelize.define('Jogador', {
   },
   equipe_id: {
     type: DataTypes.INTEGER,
-    allowNull: false, // Um jogador sempre deve pertencer a uma equipe
+    allowNull: true, // Um jogador pode ser criado inicialmente sem estar vinculado a uma equipe
     references: {
       model: 'equipes', 
       key: 'id'

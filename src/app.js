@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
@@ -23,10 +22,10 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(bodyParser.json());
+app.use(express.json({ limit: '10mb' }));
 
 // Linha para servir imagens estáticas (como logos de times da pasta 'public')
-app.use(express.static('public')); 
+app.use('/img', express.static(path.resolve(__dirname, "public/img")));
 
 // --- 3. Rotas da API ---
 app.use('/api/users', usersRoutes);

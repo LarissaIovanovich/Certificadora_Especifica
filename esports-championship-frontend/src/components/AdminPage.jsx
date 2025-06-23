@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./../assets/admin-styles.css";
+import "./admin-styles.css";
 
 const initialChampionships = [
   "Campeonato Fúria 2025",

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerenciador de Campeonatos - Atlética Fúria UTFPR</title>
+
+  <!-- Fonte gamer -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="admin-styles.css" />
+</head>
+<body>
+  <!-- Camada escura por cima da imagem de fundo -->
+  <div class="background-overlay"></div>
+
+  <!-- Conteúdo principal -->
+  <div class="main-container">
+    <!-- Painel da esquerda -->
+    <div class="manager-container">
+      <h1 class="title">ATLÉTICA FÚRIA UTFPR</h1>
+      <p class="subtitle">TELA DE ADMINISTRAÇÃO</p>
+      <ul id="championshipList" class="championship-list"></ul>
+    </div>
+
+    <!-- Lado direito com imagem -->
+    <div class="image-container">
+      <img src="IMG.jpg" alt="Arte da Atlética" />
+    </div>
+  </div>
+
+  <!-- Modal de gerenciamento -->
+  <div id="modalGerenciamento" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="fecharModal()">&times;</span>
+      <h2>Gerenciar Campeonato</h2>
+      <p id="nomeCampeonatoModal" class="modal-title"></p>
+
+      <table class="tabela-jogadores">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Status Pagamento</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="listaJogadores"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="admin-scripts.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

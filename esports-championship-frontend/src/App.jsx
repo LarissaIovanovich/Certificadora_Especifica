@@ -35,6 +35,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/campeonatos" element={<CampeonatosPage />} />
           <Route path="/equipes" element={<ListaEquipesPage />} />
+          <Route path="/criar-equipe" element={<CadastroEquipePage />} />
           <Route path="/equipe/:id" element={<PerfilEquipePage />} />
           <Route path="/chaveamento/:id" element={<ChaveamentoPage />} />
           <Route path="/chaveamento" element={<ChaveamentoPage />} />

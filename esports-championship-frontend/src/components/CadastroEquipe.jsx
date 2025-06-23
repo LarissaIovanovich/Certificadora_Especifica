@@ -1,22 +1,32 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import "./LoginPage.css"; 
+import { register } from '../services/api';
+import imgArte from '../assets/IMG.jpg';
+import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { createTeam } from '../services/api'; 
-import './CadastroEquipe.module.css';
 
-const CadastroEquipe = () => {
-  // Estados para o formulário da equipe
+export default function CadastroEquipePage() { 
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [registerMessage, setRegisterMessage] = useState("");
+  const [integrantes, setIntegrantes] = useState([]);
+  const [nomeIntegrante, setNomeIntegrante] = useState('');
+  const [nicknameIntegrante, setNicknameIntegrante] = useState('');
+  const [posicaoIntegrante, setPosicaoIntegrante] = useState('Duelista');
   const [nomeEquipe, setNomeEquipe] = useState('');
   const [tag, setTag] = useState('');
   const [imagemEquipe, setImagemEquipe] = useState(null);
-  const [imagemPreview, setImagemPreview] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf9IlIoDAoMWCaofQ6rp1WgGBgBALXhNk-3w&s');
+  const [imagemPreview, setImagemPreview] = useState('');
   
-  // Estados para a lista de jogadores (integrantes)
-  const [integrantes, setIntegrantes] = useState([]);
-  
-  // Estados para os inputs de um novo integrante
-  const [nomeIntegrante, setNomeIntegrante] = useState('');
-  const [nicknameIntegrante, setNicknameIntegrante] = useState('');
-  const [posicaoIntegrante, setPosicaoIntegrante] = useState('Duelista'); // Adicionado estado para posição
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  
   const handleImagemChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -130,11 +140,13 @@ const CadastroEquipe = () => {
     }
   };
 
+
   return (
-    <div>
-      <main className="main-container">
-        <section className="form-container">
-          <h1>CADASTRO DE EQUIPE</h1>
+    <div className="login-page-wrapper">
+      <div className="background-overlay" />
+      <div className="main-container">
+        <div className="login-container">
+          <h1 className="title">CRIAR EQUIPE</h1>
           <form onSubmit={handleSubmit}>
             <label htmlFor="nomeEquipe">NOME DA EQUIPE</label>
             <input
@@ -156,9 +168,9 @@ const CadastroEquipe = () => {
               required
             />
             <label>IMAGEM DA EQUIPE</label>
-            <div className="upload-box">
-              <img id="previewImagem" src={imagemPreview} alt="Upload imagem equipe" />
-              <input type="file" id="uploadImagem" onChange={handleImagemChange} accept="image/*" />
+            <div className="upload-box" style={{display: 'flex' ,flexDirection: 'column'}}>
+              <img id="previewImagem" src={imagemPreview} alt="Upload imagem equipe"  style={{width: 250, height: 250}}/>
+              <input type="file" id="uploadImagem" onChange={handleImagemChange} accept="image/*"/>
             </div>
             {imagemEquipe && (
               <div className="file-name">
@@ -214,11 +226,19 @@ const CadastroEquipe = () => {
               CADASTRAR EQUIPE <i className="fas fa-chevron-right"></i>
             </button>
           </form>
-        </section>
-        <aside className="img-container"></aside>
-      </main>
+          {/* Mensagem de feedback */}
+          <p className="login-message-feedback" style={{ color: registerMessage.includes("sucesso") ? "limegreen" : "#e74c3c" }}>
+            {registerMessage}
+          </p>
+          {/* Link para voltar para a página de login */}
+          <p className="signup-link">
+            Já tem uma conta? <Link to="/login">Faça Login</Link>
+          </p>
+        </div>
+        <div className="image-container">
+          <img src={imgArte} alt="Arte da Atlética" />
+        </div>
+      </div>
     </div>
   );
-};
-
-export default CadastroEquipe;
+}

@@ -35,6 +35,11 @@ module.exports = {
         posicao
       });
 
+      // Caso necessário, atualiza usuario.papel para 'jogador' (necessário para redirecionamento correto no frontend)
+      if (usuario.papel !== 'jogador') {
+        await usuario.update({ papel: 'jogador' });
+      }
+
       return res.status(201).json({ message: 'Jogador criado com sucesso', jogador: novoJogador });
     } catch (err) {
       console.error(err);

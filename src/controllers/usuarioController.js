@@ -1,5 +1,5 @@
 
-const { Usuario } = require('../models'); 
+const { Usuario } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -50,7 +50,7 @@ module.exports = {
       });
 
     } catch (err) {
-      
+
       if (err.name === 'SequelizeUniqueConstraintError') {
         return res.status(400).json({ error: 'Email ou nome de usuário já existe' });
       }
@@ -80,10 +80,10 @@ module.exports = {
 
       // Gera o token JWT
       const token = jwt.sign(
-      { id: usuario.id, papel: usuario.papel, nome_usuario: usuario.nome_usuario }, // Payload com o nome do usuário
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-);
+        { id: usuario.id, papel: usuario.papel, nome_usuario: usuario.nome_usuario }, // Payload com o nome do usuário
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
 
       // Retorna o token e algumas informações úteis do usuário
       return res.json({
@@ -102,8 +102,8 @@ module.exports = {
       return res.status(500).json({ error: "Ocorreu um erro interno no servidor." });
     }
   },
-  
- 
+
+
   async list(req, res) {
     try {
       const usuarios = await Usuario.findAll();

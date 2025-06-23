@@ -539,15 +539,14 @@ body {
 }
 
 .topNav {
-  /* Propriedades de posicionamento corrigidas */
   position: sticky;
   top: 0;
   left: 0;
-  right: 0; /* Garante que ele se estique até o final da direita */
-  width: auto; /* Deixa o navegador calcular a largura correta baseada no left/right */
+  right: 0; 
+  width: auto;
   z-index: 100;
 
-  /* Estilos visuais mantidos */
+
   background: #181818;
   display: flex;
   align-items: center;
@@ -737,7 +736,6 @@ body {
   overflow-y: auto; 
 }
 
-/* Garante que o estilo da logo seja aplicado corretamente */
 .teamLogo {
   width: 80px;
   height: 80px;
@@ -748,7 +746,6 @@ body {
   background-color: #111;
 }
 
-/* Garante que o estilo da lista de jogadores seja aplicado */
 .playerList {
   list-style: none;
   padding: 0;
@@ -795,14 +792,14 @@ body {
   overflow-y: auto;
 }
 
-/* A lista em si (ul) */
+
 .teamList {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* O item clicável da lista (o componente Link) */
+
 .teamListItem {
   display: flex;
   align-items: center;
@@ -814,16 +811,16 @@ body {
   gap: 1rem;
 }
 
-/* Efeito ao passar o mouse */
+
 .teamListItem:hover {
   background-color: #222;
   color: #fff;
 }
 
-/* A logo da equipe na lista */
+
 .teamListLogo {
-width: 20px; /* Aumentando a largura /
-height: 50px; / Mantendo ou ligeiramente aumentando a altura */
+width: 20px;
+height: 50px; 
 border-radius: 6px;
 border: 2px solid #facc1588;
 background-color: #111;
@@ -832,7 +829,7 @@ padding: 4px;
 flex-shrink: 0;
 }
 
-/* O nome da equipe na lista */
+
 .teamListName {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.2rem;
@@ -840,7 +837,7 @@ flex-shrink: 0;
   color: #fff;
 }
 
-/* A tag da equipe na lista */
+
 .teamListTag {
   font-family: sans-serif;
   font-size: 0.9rem;
@@ -848,7 +845,7 @@ flex-shrink: 0;
   font-style: italic;
 }
 
-/* Estilo para a barra de rolagem da lista */
+
 .teamListContainer::-webkit-scrollbar {
   width: 8px;
 }
@@ -860,35 +857,35 @@ flex-shrink: 0;
   background-color: #facc1588;
   border-radius: 10px;
 }
-/* NOVO CÓDIGO - MAIS DELICADO */
+
 .expandButton {
   background: transparent;
   border: none;
-  color: #888; /* Cor mais suave, um cinza claro */
-  font-size: 0.75rem; /* Tamanho do ícone de seta (▲/▼) bem menor */
+  color: #888; 
+  font-size: 0.75rem; 
   cursor: pointer;
-  padding: 0; /* Removido para controle preciso com width/height */
-  border-radius: 4px; /* Um quadrado suave em vez de um círculo */
-  width: 24px;   /* Largura bem menor */
-  height: 24px;  /* Altura bem menor */
+  padding: 0; 
+  border-radius: 4px;
+  width: 24px;   
+  height: 24px; 
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s, transform 0.2s; /* Transição mais suave */
+  transition: color 0.2s, transform 0.2s;
 }
 
 .expandButton:hover {
-  background-color: transparent; /* Garante que não haja fundo no hover */
-  color: #facc15; /* A seta fica dourada e brilhante ao passar o mouse */
-  transform: scale(1.15); /* Efeito de 'zoom' sutil para feedback */
+  background-color: transparent; 
+  color: #facc15; 
+  transform: scale(1.15); 
 }
 
 
-/* Container que agrupa o nome e a tag */
+
 .teamNameContainer {
-  flex-grow: 1; /* Faz este container ocupar o espaço livre entre a logo e o botão */
+  flex-grow: 1; 
   display: flex;
-  align-items: baseline; /* Alinha o nome (grande) e a tag (pequena) pela base do texto */
+  align-items: baseline; 
 }
 
 
@@ -901,13 +898,13 @@ flex-shrink: 0;
   transition: color 0.2s ease-in-out;
 }
 
-/* Efeito ao passar o mouse sobre o link */
+
 .teamListNameLink:hover {
   color: #facc15; 
   text-decoration: underline; 
 }
 
-/* A tag da equipe, ex: (LOUD) */
+
 .teamListTag {
   font-family: sans-serif;
   font-size: 0.9rem;

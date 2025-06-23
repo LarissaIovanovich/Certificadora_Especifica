@@ -24,7 +24,7 @@ const Torneio = sequelize.define('Torneio', {
     allowNull: true
   },
   url_imagem_banner: {
-    type: DataTypes.STRING(500), // Aumentado para acomodar URLs mais longas
+    type: DataTypes.STRING(500),
     allowNull: true
   },
   data_inicio: {
@@ -38,7 +38,7 @@ const Torneio = sequelize.define('Torneio', {
   criado_por: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    references: { // Adicionada a referência para a chave estrangeira
+    references: {
       model: 'usuarios',
       key: 'id'
     }
@@ -46,18 +46,22 @@ const Torneio = sequelize.define('Torneio', {
   status: {
     type: DataTypes.STRING(50),
     allowNull: false,
-    defaultValue: 'Não definido' // Valor padrão para status
+    defaultValue: 'Não definido'
   }
 }, {
   tableName: 'torneios',
   timestamps: false
 });
 
-// 2. Definição completa das associações
+// --- AJUSTE FEITO AQUI ---
 Torneio.associate = (models) => {
   // Relação Muitos-para-Muitos: Um torneio tem muitas equipes participantes
   Torneio.belongsToMany(models.Equipe, {
-    through: 'torneio_equipes',
+    // A propriedade 'through' agora é um objeto para podermos passar mais opções
+    through: {
+      model: 'torneio_equipes',
+      timestamps: false
+    },
     foreignKey: 'torneio_id',
     as: 'equipes'
   });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from 'react-router-dom'; // Juntei o Link aqui
+import { useParams, Link } from 'react-router-dom';
 import styles from "./Chaveamento.module.css";
 import CampeonatoHeader from "./CampeonatoHeader";
 import FuriaNav from "./FuriaNav";

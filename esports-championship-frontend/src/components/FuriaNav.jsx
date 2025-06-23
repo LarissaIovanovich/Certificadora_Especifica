@@ -27,6 +27,14 @@ export default function FuriaNav() {
             Minha Equipe
           </NavLink>
         )}
+
+        {/* --- LINK CONDICIONAL PARA ADMIN --- */}
+        {/* Este link só aparece se o usuário estiver logado E tiver o papel de 'admin' */}
+        {isAuthenticated && user?.papel === 'admin' && (
+          <NavLink to="/admin/torneios" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>
+            Painel Admin
+          </NavLink>
+        )}
       </div>
 
       <div className={styles.authSection}>
@@ -39,7 +47,6 @@ export default function FuriaNav() {
           </>
         ) : (
           <>
-            {/* O link "Sobre" pode ser movido para o .navLinks se preferir */}
             <NavLink to="/sobre" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>
               Sobre
             </NavLink>

@@ -9,7 +9,6 @@ const InscricaoPage = () => {
     e.preventDefault();
     if (regulamentoAceito && dadosConfirmados) {
       alert("Inscrição confirmada com sucesso!");
-      // Aqui entraria a lógica de envio para a API
     }
   };
 

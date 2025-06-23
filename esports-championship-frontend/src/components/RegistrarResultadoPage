@@ -1,0 +1,176 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+const api = {
+    get: (url) => Promise.resolve({ data: { id: 1, equipeA: { id: 16, nome: 'LOUD', jogadores: [{id: 1, apelido: 'saadhak'}, {id: 2, apelido: 'Less'}] }, equipeB: { id: 17, nome: 'Sentinels', jogadores: [{id: 6, apelido: 'TenZ'}, {id: 9, apelido: 'Sacy'}] } } }),
+    post: (url, payload) => Promise.resolve({ data: { message: 'Sucesso!' } })
+};
+
+
+
+import styles from './RegistrarResultadoPage.module.css';
+
+export default function RegistrarResultadoPage() {
+    // Hooks para pegar o ID da partida da URL e para navegar
+    const { id: partidaId } = useParams();
+    const navigate = useNavigate();
+
+    // Estado para guardar os dados da partida (equipes, jogadores)
+    const [partida, setPartida] = useState(null);
+    
+    // Estados para os campos do formulário
+    const [pontuacaoA, setPontuacaoA] = useState('');
+    const [pontuacaoB, setPontuacaoB] = useState('');
+    const [mapa, setMapa] = useState('');
+    const [vencedorId, setVencedorId] = useState('');
+    
+    // Estado para os stats de cada jogador (KDA, Agente)
+    const [playerStats, setPlayerStats] = useState([]);
+
+    // Estados de controle da UI
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Efeito para buscar os dados da partida ao carregar a página
+    useEffect(() => {
+        const fetchPartidaData = async () => {
+            try {
+                // Busca os dados da partida para saber quem são os times e jogadores
+                const response = await api.get(`/partidas/${partidaId}`);
+                const partidaData = response.data;
+                setPartida(partidaData);
+
+                // Junta os jogadores dos dois times em uma única lista
+                const todosJogadores = [
+                    ...(partidaData.equipeA.jogadores || []),
+                    ...(partidaData.equipeB.jogadores || [])
+                ];
+
+                // Inicializa o estado 'playerStats' com os dados dos jogadores
+                const initialStats = todosJogadores.map(jogador => ({
+                    jogador_id: jogador.id,
+                    nome: jogador.apelido,
+                    abates: '',
+                    mortes: '',
+                    assistencias: '',
+                    agente_usado: ''
+                }));
+                setPlayerStats(initialStats);
+
+            } catch (err) {
+                setError('Falha ao carregar os dados da partida.');
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPartidaData();
+    }, [partidaId]);
+
+    // Função para atualizar o estado dos stats de um jogador específico
+    const handleStatChange = (index, field, value) => {
+        const updatedStats = [...playerStats];
+        updatedStats[index][field] = value;
+        setPlayerStats(updatedStats);
+    };
+
+    // Função para lidar com o envio do formulário
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setError('');
+        setSuccess('');
+
+        // Monta o objeto final para enviar à API
+        const payload = {
+            pontuacao_a: parseInt(pontuacaoA, 10),
+            pontuacao_b: parseInt(pontuacaoB, 10),
+            equipe_vencedora_id: parseInt(vencedorId, 10),
+            mapa,
+            // Formata os resultados dos jogadores para enviar apenas os dados necessários
+            resultados_jogadores: playerStats.map(p => ({
+                jogador_id: p.jogador_id,
+                abates: parseInt(p.abates, 10),
+                mortes: parseInt(p.mortes, 10),
+                assistencias: parseInt(p.assistencias, 10),
+                agente_usado: p.agente_usado
+            }))
+        };
+
+        try {
+            await api.post(`/partidas/${partidaId}/resultado`, payload);
+            setSuccess('Resultado registrado com sucesso! Redirecionando...');
+            // Redireciona para uma página de admin após 2 segundos
+            setTimeout(() => {
+                navigate('/admin/partidas'); 
+            }, 2000);
+        } catch (err) {
+            setError(err.response?.data?.error || 'Ocorreu um erro ao enviar o resultado.');
+            console.error(err);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // Renderização condicional enquanto os dados carregam ou se houver erro
+    if (loading) return <div className={styles.container}>Carregando dados da partida...</div>;
+    if (error && !partida) return <div className={`${styles.container} ${styles.error}`}>{error}</div>;
+
+    return (
+        <div className={styles.container}>
+            <h1>Registrar Resultado da Partida</h1>
+            {partida && <h2>{partida.equipeA.nome} vs {partida.equipeB.nome}</h2>}
+            
+            <form onSubmit={handleSubmit}>
+                {/* --- SEÇÃO DE INFORMAÇÕES GERAIS --- */}
+                <div className={styles.generalInfo}>
+                    <input type="number" placeholder={`Pontos ${partida?.equipeA.nome}`} value={pontuacaoA} onChange={(e) => setPontuacaoA(e.target.value)} required />
+                    <input type="number" placeholder={`Pontos ${partida?.equipeB.nome}`} value={pontuacaoB} onChange={(e) => setPontuacaoB(e.target.value)} required />
+                    <input type="text" placeholder="Mapa" value={mapa} onChange={(e) => setMapa(e.target.value)} required />
+                    <select value={vencedorId} onChange={(e) => setVencedorId(e.target.value)} required>
+                        <option value="">Selecione o vencedor</option>
+                        {partida && <option value={partida.equipeA.id}>{partida.equipeA.nome}</option>}
+                        {partida && <option value={partida.equipeB.id}>{partida.equipeB.nome}</option>}
+                    </select>
+                </div>
+
+                {/* --- SEÇÃO DOS JOGADORES --- */}
+                <h3>Estatísticas dos Jogadores</h3>
+                <div className={styles.tableContainer}>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Jogador</th>
+                                <th>Agente</th>
+                                <th>Abates</th>
+                                <th>Mortes</th>
+                                <th>Assistências</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {playerStats.map((player, index) => (
+                                <tr key={player.jogador_id}>
+                                    <td>{player.nome}</td>
+                                    <td><input type="text" value={player.agente_usado} onChange={(e) => handleStatChange(index, 'agente_usado', e.target.value)} required /></td>
+                                    <td><input type="number" value={player.abates} onChange={(e) => handleStatChange(index, 'abates', e.target.value)} required /></td>
+                                    <td><input type="number" value={player.mortes} onChange={(e) => handleStatChange(index, 'mortes', e.target.value)} required /></td>
+                                    <td><input type="number" value={player.assistencias} onChange={(e) => handleStatChange(index, 'assistencias', e.target.value)} required /></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? 'Enviando...' : 'Salvar Resultado'}
+                </button>
+
+                {/* Mensagens de feedback */}
+                {success && <p className={styles.success}>{success}</p>}
+                {error && <p className={styles.error}>{error}</p>}
+            </form>
+        </div>
+    );
+}

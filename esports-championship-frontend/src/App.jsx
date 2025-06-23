@@ -6,6 +6,8 @@ import LoginPage from './components/LoginPage';
 import SignInPage from './components/SignInPage';
 import PartidasPage from './components/PartidasPage';
 import PlacarPage from './components/Placar';
+import AdminPage from './components/AdminPage';
+import CriarCampeonato from './components/CriarCampeonato';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/partidas" element={<PartidasPage />} />
         <Route path="/placar" element={<PlacarPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/criar" element={<CriarCampeonato />} />
       </Routes>
     </Router>
   );

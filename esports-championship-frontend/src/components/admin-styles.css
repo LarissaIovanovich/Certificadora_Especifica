@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-/* Reset básico e aplicação de fonte com estilo forte e bem gamer */
 * {
   margin: 0;
   padding: 0;
@@ -10,25 +9,21 @@
 }
 
 body {
-  /* Centralização da main-container no centro da tela */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   padding: 20px;
   background-color: #000;
-
-  /* Aplicação do fundo visual com imagem e ajuste para cobrir a tela inteira */
   position: relative;
-  background-image: url('fundo.png');
+  background-image: url('../assets/fundo.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   overflow: hidden;
+  color: #f5c400;
 }
 
-/* Camada escura por cima da imagem de fundo, deixando o conteúdo mais legível */
 .background-overlay {
   position: fixed;
   top: 0;
@@ -37,19 +32,12 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 1;
-  pointer-events: none; /* Garante que a camada não atrapalhe os cliques */
+  pointer-events: none;
 }
 
-/* Animação leve ao carregar a página — dá um toque suave na experiência */
 @keyframes fadeInPage {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 .main-container {
@@ -59,19 +47,13 @@ body {
   border-radius: 12px;
   overflow: hidden;
   max-width: 960px;
-  width: 760px;
+  width: 820px;
   position: relative;
   z-index: 2;
-
-  /* Sombra estilizada com o amarelo da identidade visual */
-  box-shadow:
-    0 0 15px rgba(245, 196, 0, 0.8),
-    0 10px 40px rgba(0, 0, 0, 0.9);
-
+  box-shadow: 0 0 15px rgba(245, 196, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.9);
   animation: fadeInPage 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards 0.2s;
 }
 
-/* Bloco da esquerda — onde fica a parte funcional da gestão */
 .manager-container {
   flex: 1;
   background-color: #121212;
@@ -82,7 +64,6 @@ body {
   border-radius: 12px 0 0 12px;
 }
 
-/* Título estilizado com cor principal do projeto */
 .title {
   font-size: 2.5rem;
   color: #f5c400;
@@ -90,7 +71,6 @@ body {
   text-align: center;
 }
 
-/* Subtítulo mais discreto */
 .subtitle {
   font-size: 1.2rem;
   color: #fff;
@@ -99,7 +79,6 @@ body {
   margin-bottom: 10px;
 }
 
-/* Lista com rolagem caso necessário — permite adicionar campeonatos sem quebrar tudo */
 .championship-list {
   list-style: none;
   overflow-y: auto;
@@ -108,7 +87,6 @@ body {
   padding-right: 5px;
 }
 
-/* Cada campeonato vira um bloco visual separado com borda amarela */
 .championship-list li {
   background-color: #000;
   border: 2px solid #f5c400;
@@ -121,24 +99,24 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Nome centralizado */
 .championship-list li span {
   text-align: center;
   width: 100%;
 }
 
-/* Botões dispostos lado a lado */
+/* Botões dentro do grupo */
 .button-group {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
 }
 
-/* Botões com estilo “inverso”: fundo preto e borda colorida */
 .button-group button {
-  flex: 1;
+  flex: 1 1 30%;
   background-color: transparent;
   border: 2px solid #f5c400;
   color: #f5c400;
@@ -147,15 +125,37 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
+  text-align: center;
 }
 
-/* Ao passar o mouse, o botão fica preenchido — cria contraste legal */
 .button-group button:hover {
   background-color: #f5c400;
   color: #000;
 }
 
-/* Lado direito da tela — onde entra a imagem */
+/* Botão de relatórios (herda as mesmas regras dos outros) */
+.button-group button.relatorios {
+  /* Pode adicionar algo específico aqui se quiser, mas pode ficar igual */
+}
+
+/* Estado cancelado */
+.cancelado {
+  color: #e74c3c !important;
+  border-color: #e74c3c !important;
+  background-color: #1a0000 !important;
+  text-align: center;
+  font-weight: 700;
+  text-decoration: line-through;
+  opacity: 0.85;
+}
+
+/* Estado suspenso */
+.suspenso {
+  color: gray !important;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
 .image-container {
   flex: 1;
   background-color: #000;
@@ -167,12 +167,142 @@ body {
   min-height: 400px;
 }
 
-/* A imagem se adapta sem deformar */
 .image-container img {
   max-width: 100%;
   height: auto;
   object-fit: contain;
 }
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  background-color: #121212;
+  margin: 5% auto 10% auto;
+  padding: 30px 25px;
+  border: 2px solid #f5c400;
+  width: 90%;
+  max-width: 880px;
+  border-radius: 14px;
+  color: #f5c400;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 0 15px #f5c400aa;
+  animation: fadeInPage 0.5s ease forwards;
+}
+
+.modal-title {
+  font-weight: 700;
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+.close {
+  color: #f5c400;
+  font-size: 30px;
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+  align-self: flex-end;
+  margin-bottom: -35px;
+  transition: color 0.3s ease;
+}
+
+.close:hover {
+  color: #fff200;
+}
+
+.tabela-jogadores {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.1rem;
+}
+
+.tabela-jogadores th,
+.tabela-jogadores td {
+  border: 1.8px solid #f5c400;
+  padding: 10px 15px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.tabela-jogadores th {
+  background-color: #222;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.tabela-jogadores td span.email {
+  font-style: italic;
+  font-weight: 400;
+  color: #ccc;
+  display: block;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  text-transform: none;
+}
+
+.tabela-jogadores button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  min-width: 90px;
+  text-transform: uppercase;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.tabela-jogadores button.status {
+  color: #000;
+}
+
+.tabela-jogadores button.pago {
+  background-color: limegreen;
+}
+
+.tabela-jogadores button.nao-pago {
+  background-color: #e74c3c;
+}
+
+.tabela-jogadores button.remover {
+  background-color: #555;
+  color: #f5c400;
+}
+
+.tabela-jogadores button:hover {
+  filter: brightness(1.1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

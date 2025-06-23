@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { login as apiLogin } from '../services/api'; 
-import { jwtDecode } from 'jwt-decode'; 
+import { login as apiLogin } from '../services/api';
+import { jwtDecode } from 'jwt-decode';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const decodedUser = jwtDecode(token); 
-         setUser({ id: decodedUser.id, papel: decodedUser.papel, nome_usuario: decodedUser.nome_usuario });
+          const decodedUser = jwtDecode(token);
+          setUser({ id: decodedUser.id, papel: decodedUser.papel, nome_usuario: decodedUser.nome_usuario });
         } catch (error) {
           console.error("Token inválido:", error);
           localStorage.removeItem('token');

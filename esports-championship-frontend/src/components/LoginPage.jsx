@@ -68,7 +68,7 @@ export default function LoginPage() {
           
           {/* Link para a página de cadastro */}
           <p className="signup-link">
-            Não tem uma conta? <Link to="/signin">Cadastre-se</Link>
+            Não tem uma conta? <Link to="/signup">Cadastre-se</Link>
           </p>
         </div>
         <div className="image-container">

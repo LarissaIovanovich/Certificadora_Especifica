@@ -13,7 +13,6 @@ export default function ListaEquipesPage() {
     async function fetchAllEquipes() {
       try {
         setLoading(true);
-        // Usamos a rota da API que lista todas as equipes
         const response = await fetch('/api/equipes');
         if (!response.ok) {
           throw new Error('Falha ao buscar equipes');

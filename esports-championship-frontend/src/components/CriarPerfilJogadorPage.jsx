@@ -1,8 +1,6 @@
-// em src/pages/CriarPerfilJogadorPage.js
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createPlayerProfile } from '../services/api'; 
+import api from '../services/api'; 
 import FuriaNav from '../components/FuriaNav';
 import styles from './CriarPerfilJogadorPage.module.css'; 
 
@@ -23,16 +21,17 @@ export default function CriarPerfilJogadorPage() {
 
     const profileData = {
       apelido,
-      riot_id: riotId,
+      riot_id: riotId, 
       tag_line: tagLine,
       posicao,
     };
 
     try {
-      await createPlayerProfile(profileData);
+      await api.post('/jogadores', profileData);
+
       setMessage('Perfil de jogador criado com sucesso! Redirecionando...');
       setTimeout(() => {
-        // Envia o usuário para a página "Minha Equipe", que agora o redirecionará corretamente
+        // Envia o usuário para a página "Minha Equipe"
         navigate('/minha-equipe');
       }, 2000);
     } catch (err) {
@@ -40,6 +39,7 @@ export default function CriarPerfilJogadorPage() {
       setError(errorMessage);
     }
   };
+
 
   return (
     <>

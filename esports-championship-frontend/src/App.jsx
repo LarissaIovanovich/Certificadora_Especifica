@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-
 import CadastroEquipePage from './components/CadastroEquipe';
 import CampeonatosPage from './components/CampeonatosPage';
 import InscricaoPage from './components/InscricaoPage';
@@ -14,15 +13,9 @@ import PerfilEquipePage from './components/PerfilEquipePage';
 import ListaEquipesPage from './components/ListaEquipesPage';
 import CriarPerfilJogadorPage from './components/CriarPerfilJogadorPage';
 import MinhaEquipePage from './components/MinhaEquipePage';
+import AdminTorneioDetalhesPage from './components/AdminTorneioDetalhesPage';
+import AdminListaTorneios from './components/AdminListaTorneios';
 
-// Decide o redirecionamento da rota "/" baseado no estado de autenticação
-function HomeRedirect() {
-  const { isAuthenticated, loading } = useAuth();
-  if (loading) return null;
-  return isAuthenticated
-    ? <Navigate to="/campeonatos" replace />
-    : <Navigate to="/login" replace />;
-}
 
 function App() {
   return (
@@ -30,7 +23,7 @@ function App() {
       <AuthProvider>
         <Routes>
           {/* --- Rotas Públicas --- */}
-          <Route path="/" element={<HomeRedirect />} />
+          <Route path="/" element={<Navigate replace to="/campeonatos" />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/campeonatos" element={<CampeonatosPage />} />
@@ -41,6 +34,22 @@ function App() {
           <Route path="/chaveamento" element={<ChaveamentoPage />} />
           <Route path="/partidas" element={<PartidasPage />} />
           <Route path="/placar" element={<PlacarPage />} />
+          <Route
+          path="/admin/torneio/:id" 
+          element={
+              <ProtectedRoute>
+                  <AdminTorneioDetalhesPage />
+              </ProtectedRoute>
+          }
+          />
+          <Route
+    path="/admin/torneios"
+    element={
+        <ProtectedRoute>
+            <AdminListaTorneios />
+        </ProtectedRoute>
+    }
+/>
 
           {/* --- Rotas Protegidas (só para usuários logados) --- */}
           <Route
@@ -59,9 +68,10 @@ function App() {
             path="/inscricao"
             element={<ProtectedRoute><InscricaoPage /></ProtectedRoute>}
           />
+          
+          
 
-          {/* Você pode adicionar uma rota "catch-all" para página não encontrada aqui no futuro */}
-          {/* <Route path="*" element={<PaginaNaoEncontrada />} /> */}
+          {/* --- Rota de Redirecionamento para o Login --- */}
         </Routes>
       </AuthProvider>
     </Router>

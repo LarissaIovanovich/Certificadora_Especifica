@@ -15,5 +15,6 @@ router.post('/login', usersController.login);
 // Estas rotas para listar e buscar usuários continuam protegidas
 router.get('/', authMiddleware, requireRole(['admin', 'organizador']), usersController.list);
 router.get('/:id', authMiddleware, requireRole(['admin', 'organizador']), usersController.getById);
+router.post('/profile', authMiddleware, usersController.createProfile);
 
 module.exports = router;

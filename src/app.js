@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const morgan = require('morgan');
+const listEndpoints = require('express-list-endpoints')
 
 // --- 1. Importação de Todas as Rotas ---
 const usersRoutes = require('./routes/usersRoutes');
@@ -35,6 +36,13 @@ app.use('/api/jogadores', jogadoresRoutes);
 app.use('/api/partidas', partidasRoutes);
 app.use('/api/torneios', torneiosRoutes);
 app.use('/api/resultados', resultadosRoutes);
+
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+console.log('--- ROTAS REGISTRADAS NO EXPRESS ---');
+console.log(listEndpoints(app));
+console.log('------------------------------------');
 
 // --- 4. Servir o Frontend 
 app.use(express.static(path.join(__dirname, '../frontend/build')));

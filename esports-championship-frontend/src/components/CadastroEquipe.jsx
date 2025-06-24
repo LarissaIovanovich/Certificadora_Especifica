@@ -1,16 +1,11 @@
 import { useState } from "react";
 import "./LoginPage.css"; 
-import { register } from '../services/api';
 import imgArte from '../assets/IMG.jpg';
-import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { createTeam } from '../services/api'; 
+import { useNavigate } from 'react-router-dom'; 
+import api from '../services/api'; 
+import FuriaNav from "./FuriaNav";
 
 export default function CadastroEquipePage() { 
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [registerMessage, setRegisterMessage] = useState("");
   const [integrantes, setIntegrantes] = useState([]);
   const [nomeIntegrante, setNomeIntegrante] = useState('');
@@ -20,7 +15,8 @@ export default function CadastroEquipePage() {
   const [tag, setTag] = useState('');
   const [imagemEquipe, setImagemEquipe] = useState(null);
   const [imagemPreview, setImagemPreview] = useState('');
-  
+  const navigate = useNavigate(); 
+
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -48,46 +44,37 @@ export default function CadastroEquipePage() {
     return integrantes.some((i, idx) => i.nickname.toLowerCase() === nickname.toLowerCase() && idx !== ignorarIndex);
   };
 
-  // Atualizado para incluir a posição
   const handleAdicionarIntegrante = () => {
     if (!nomeIntegrante || !nicknameIntegrante || !posicaoIntegrante) {
       alert('Preencha nome, nickname e posição do integrante.');
       return;
     }
-
     if (nicknameExiste(nicknameIntegrante)) {
       alert('Nickname já existe na equipe.');
       return;
     }
-    
-    // Adiciona o integrante com sua posição
     setIntegrantes([...integrantes, { nome: nomeIntegrante, nickname: nicknameIntegrante, posicao: posicaoIntegrante }]);
-    
-    // Limpa os campos
     setNomeIntegrante('');
     setNicknameIntegrante('');
-    setPosicaoIntegrante('Duelista'); // Reseta para o valor padrão
+    setPosicaoIntegrante('Duelista');
   };
 
-  // Atualizado para incluir a posição
   const handleEditarIntegrante = (index) => {
     const integrante = integrantes[index];
     const novoNome = prompt('Novo nome do integrante:', integrante.nome);
     const novoNickname = prompt('Novo nickname:', integrante.nickname);
     const novaPosicao = prompt('Nova posição (Duelista, Controlador, Iniciador, Sentinela, Flex):', integrante.posicao);
 
-
     if (novoNome && novoNickname && novaPosicao) {
       if (nicknameExiste(novoNickname, index)) {
         alert('Este nickname já está em uso por outro integrante.');
         return;
       }
-
       const novosIntegrantes = [...integrantes];
       novosIntegrantes[index] = {
         nome: novoNome.trim(),
         nickname: novoNickname.trim(),
-        posicao: novaPosicao.trim() // Salva a nova posição
+        posicao: novaPosicao.trim()
       };
       setIntegrantes(novosIntegrantes);
     }
@@ -97,23 +84,20 @@ export default function CadastroEquipePage() {
     const novosIntegrantes = integrantes.filter((_, i) => i !== index);
     setIntegrantes(novosIntegrantes);
   };
-
-  // *** LÓGICA DE SUBMISSÃO ***
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validação básica
     if (!nomeEquipe || !tag) {
         alert("O nome e a tag da equipe são obrigatórios.");
         return;
     }
-    if (integrantes.length < 5) { // Pode-se exigir um número mínimo, ex: 5
+    if (integrantes.length < 5) {
         alert("A equipe deve ter pelo menos 5 jogadores.");
         return;
     }
 
     try {
-      // Objeto que será enviado para a API
       const equipeData = {
         nome: nomeEquipe,
         tag: tag,
@@ -121,17 +105,15 @@ export default function CadastroEquipePage() {
         jogadores: integrantes.map(intg => ({
           apelido: intg.nickname,
           posicao: intg.posicao,
-          // O backend irá gerar o riot_id, tag_line, etc. com base nestes dados
         }))
       };
-
-      // A função createTeam agora envia o objeto completo
-      await createTeam(equipeData);
+    
+      await api.post('/equipes', equipeData);
 
       alert("Equipe e jogadores cadastrados com sucesso!");
       setTimeout(() => {
-        // Limpar o formulário ou redirecionar
-        window.location.reload(); 
+        
+        navigate('/equipes');
       }, 1000);
 
     } catch (error) {
@@ -142,6 +124,8 @@ export default function CadastroEquipePage() {
 
 
   return (
+    <>
+      <FuriaNav />
     <div className="login-page-wrapper">
       <div className="background-overlay" />
       <div className="main-container">
@@ -167,7 +151,9 @@ export default function CadastroEquipePage() {
               maxLength="10"
               required
             />
-            <label>IMAGEM DA EQUIPE</label>
+            {/* corrigir base 64 erro de requst muito grande*/}
+            {/* 
+              <label>IMAGEM DA EQUIPE</label>
             <div className="upload-box" style={{display: 'flex' ,flexDirection: 'column'}}>
               <img id="previewImagem" src={imagemPreview} alt="Upload imagem equipe"  style={{width: 250, height: 250}}/>
               <input type="file" id="uploadImagem" onChange={handleImagemChange} accept="image/*"/>
@@ -178,6 +164,7 @@ export default function CadastroEquipePage() {
                 <button type="button" className="remover" onClick={handleRemoverImagem}>REMOVER</button>
               </div>
             )}
+            */}
 
             <label>INTEGRANTES</label>
             <div className="integrante-inputs">
@@ -193,7 +180,6 @@ export default function CadastroEquipePage() {
                 value={nicknameIntegrante}
                 onChange={(e) => setNicknameIntegrante(e.target.value)}
               />
-              {/* CAMPO DE SELEÇÃO PARA A POSIÇÃO */}
               <select 
                 value={posicaoIntegrante} 
                 onChange={(e) => setPosicaoIntegrante(e.target.value)}
@@ -212,7 +198,6 @@ export default function CadastroEquipePage() {
             <ul id="listaIntegrantes">
               {integrantes.map((intg, index) => (
                 <li key={index}>
-                  {/* Mostra a posição do jogador na lista */}
                   <span>{intg.nome} (<strong>{intg.nickname}</strong>) - {intg.posicao}</span>
                   <div>
                     <button type="button" onClick={() => handleEditarIntegrante(index)}>EDITAR</button>
@@ -230,15 +215,13 @@ export default function CadastroEquipePage() {
           <p className="login-message-feedback" style={{ color: registerMessage.includes("sucesso") ? "limegreen" : "#e74c3c" }}>
             {registerMessage}
           </p>
-          {/* Link para voltar para a página de login */}
-          <p className="signup-link">
-            Já tem uma conta? <Link to="/login">Faça Login</Link>
-          </p>
+        
         </div>
         <div className="image-container">
           <img src={imgArte} alt="Arte da Atlética" />
         </div>
       </div>
     </div>
+    </>
   );
 }

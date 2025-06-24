@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
 
 export default function MinhaEquipePage() {
   const { user, loading } = useAuth();
@@ -18,7 +19,7 @@ export default function MinhaEquipePage() {
       setShowModal(true);
     }
     // Se o usuário logado é um jogador e não tem um perfil de jogador criado...
-    else if (user && user.papel == 'jogador' && !user.perfil_jogador) {
+    else if (user && user.papel === 'jogador' && !user.perfil_jogador) {
       navigate('/criar-perfil-jogador');
     }
     // Se o usuário é um jogador e já tem uma equipe...
@@ -29,15 +30,36 @@ export default function MinhaEquipePage() {
     else if (user && user.perfil_jogador) {
       navigate('/equipes');
     }
+    // Se for um organizador...
+    else if (user && user.papel === 'organizador') {
+      navigate('/cadastro');
+    }
   }, [user, loading, navigate]);
 
-  const handleSelectRole = (selectedRole) => {
+  const handleSelectRole = async (selectedRole) => {
+    const confirmMsg = `Tem certeza que deseja ser ${selectedRole}?`;
+    if (!window.confirm(confirmMsg)) return;
+
     setShowModal(false);
-    if (selectedRole === 'jogador') {
-      navigate('/criar-perfil-jogador');
-    } else if (selectedRole === 'organizador') {
-      // poderíamos enviar um PUT para settar usuario como 'organizador' no backend
-      navigate('/cadastro');
+
+    try {
+      const response = await api.put('/users', { papel: selectedRole });
+      user.papel = response.data.usuario.papel;
+
+      if (response.status !== 200) {
+        alert('Erro ao atualizar papel do usuário.');
+        return;
+      }
+
+      // Redireciona conforme o papel escolhido
+      if (selectedRole === 'jogador') {
+        navigate('/criar-perfil-jogador');
+      } else if (selectedRole === 'organizador') {
+        navigate('/cadastro');
+      }
+    } catch (err) {
+      console.log(err);
+      alert('Erro de conexão ao atualizar papel.');
     }
   };
 

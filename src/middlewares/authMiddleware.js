@@ -10,13 +10,9 @@ exports.authMiddleware = async (req, res, next) => {
         }
 
         const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-        
-    
-  
         const usuario = await Usuario.findByPk(decoded.id);
 
         if (!usuario) {
-         
             return res.status(401).json({ message: 'Usuário do token não encontrado.' });
         }
 
@@ -27,7 +23,6 @@ exports.authMiddleware = async (req, res, next) => {
         return res.status(401).json({ message: 'Token inválido ou expirado.' });
     }
 };
-
 
 exports.requireRole = (allowedRoles) => {
     return (req, res, next) => {

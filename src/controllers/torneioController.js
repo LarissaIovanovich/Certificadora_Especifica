@@ -80,6 +80,7 @@ module.exports = {
         if (!equipesPagas || equipesPagas.length < 2) {
             return res.status(400).json({ error: 'Não há equipes com pagamento confirmado suficientes para gerar o chaveamento.' });
         }
+
         if (equipesPagas.length % 2 !== 0) {
             return res.status(400).json({ error: 'O número de equipes com pagamento confirmado deve ser par.' });
         }

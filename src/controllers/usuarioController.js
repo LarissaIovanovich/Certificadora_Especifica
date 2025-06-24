@@ -234,8 +234,8 @@ module.exports = {
         usuario.senha_hash = await bcrypt.hash(senha, salt);
       }
 
-      if (papel && !usuario.papel && (papel === 'jogador' || papel === 'organizador')) {
-        // permite SOMENTE caso usuário não tenha papel definido e seja para 'jogador' ou 'organizador'
+      if (papel && (!usuario.papel || usuario.papel === 'usuario') && (papel === 'jogador' || papel === 'organizador')) {
+        // permite SOMENTE caso usuário não tenha papel definido (ou seja papel 'usuario') e mudança seja para 'jogador' ou 'organizador'
         usuario.papel = papel;
       }
 

@@ -15,7 +15,7 @@ export default function MinhaEquipePage() {
     if (loading) return;
 
     // Se o usuário não tem um papel definido...
-    if (!user.papel) {
+    if (!user.papel || user.papel === 'usuario') {
       setShowModal(true);
     }
     // Se o usuário logado é um jogador e não tem um perfil de jogador criado...

@@ -28,6 +28,12 @@ export default function FuriaNav() {
           </NavLink>
         )}
 
+        {isAuthenticated && (
+          <NavLink to="/criar-equipe" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>
+            Criar Equipe
+          </NavLink>
+        )}
+
         {/* --- LINK CONDICIONAL PARA ADMIN --- */}
         {/* Este link só aparece se o usuário estiver logado E tiver o papel de 'admin' */}
         {isAuthenticated && user?.papel === 'admin' && (

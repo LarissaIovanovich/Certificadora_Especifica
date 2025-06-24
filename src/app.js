@@ -36,6 +36,8 @@ app.use('/api/partidas', partidasRoutes);
 app.use('/api/torneios', torneiosRoutes);
 app.use('/api/resultados', resultadosRoutes);
 
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 console.log('--- ROTAS REGISTRADAS NO EXPRESS ---');
 console.log(listEndpoints(app));

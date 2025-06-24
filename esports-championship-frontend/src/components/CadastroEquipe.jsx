@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import "./LoginPage.css"; 
+import imgArte from '../assets/IMG.jpg';
 import { useNavigate } from 'react-router-dom'; 
 import api from '../services/api'; 
-import './CadastroEquipe.module.css';
+import FuriaNav from "./FuriaNav";
 
-const CadastroEquipe = () => {
-  const navigate = useNavigate(); 
-
-  
-  const [nomeEquipe, setNomeEquipe] = useState('');
-  const [tag, setTag] = useState('');
-  const [imagemEquipe, setImagemEquipe] = useState(null);
-  const [imagemPreview, setImagemPreview] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf9IlIoDAoMWCaofQ6rp1WgGBgBALXhNk-3w&s');
+export default function CadastroEquipePage() { 
+  const [registerMessage, setRegisterMessage] = useState("");
   const [integrantes, setIntegrantes] = useState([]);
   const [nomeIntegrante, setNomeIntegrante] = useState('');
   const [nicknameIntegrante, setNicknameIntegrante] = useState('');
   const [posicaoIntegrante, setPosicaoIntegrante] = useState('Duelista');
+  const [nomeEquipe, setNomeEquipe] = useState('');
+  const [tag, setTag] = useState('');
+  const [imagemEquipe, setImagemEquipe] = useState(null);
+  const [imagemPreview, setImagemPreview] = useState('');
+  const navigate = useNavigate(); 
 
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  
   const handleImagemChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -78,7 +84,6 @@ const CadastroEquipe = () => {
     const novosIntegrantes = integrantes.filter((_, i) => i !== index);
     setIntegrantes(novosIntegrantes);
   };
-
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,7 +107,6 @@ const CadastroEquipe = () => {
           posicao: intg.posicao,
         }))
       };
-
     
       await api.post('/equipes', equipeData);
 
@@ -118,11 +122,15 @@ const CadastroEquipe = () => {
     }
   };
 
+
   return (
-    <div>
-      <main className="main-container">
-        <section className="form-container">
-          <h1>CADASTRO DE EQUIPE</h1>
+    <>
+      <FuriaNav />
+    <div className="login-page-wrapper">
+      <div className="background-overlay" />
+      <div className="main-container">
+        <div className="login-container">
+          <h1 className="title">CRIAR EQUIPE</h1>
           <form onSubmit={handleSubmit}>
             <label htmlFor="nomeEquipe">NOME DA EQUIPE</label>
             <input
@@ -143,10 +151,12 @@ const CadastroEquipe = () => {
               maxLength="10"
               required
             />
-            <label>IMAGEM DA EQUIPE</label>
-            <div className="upload-box">
-              <img id="previewImagem" src={imagemPreview} alt="Upload imagem equipe" />
-              <input type="file" id="uploadImagem" onChange={handleImagemChange} accept="image/*" />
+            {/* corrigir base 64 erro de requst muito grande*/}
+            {/* 
+              <label>IMAGEM DA EQUIPE</label>
+            <div className="upload-box" style={{display: 'flex' ,flexDirection: 'column'}}>
+              <img id="previewImagem" src={imagemPreview} alt="Upload imagem equipe"  style={{width: 250, height: 250}}/>
+              <input type="file" id="uploadImagem" onChange={handleImagemChange} accept="image/*"/>
             </div>
             {imagemEquipe && (
               <div className="file-name">
@@ -154,6 +164,7 @@ const CadastroEquipe = () => {
                 <button type="button" className="remover" onClick={handleRemoverImagem}>REMOVER</button>
               </div>
             )}
+            */}
 
             <label>INTEGRANTES</label>
             <div className="integrante-inputs">
@@ -200,11 +211,17 @@ const CadastroEquipe = () => {
               CADASTRAR EQUIPE <i className="fas fa-chevron-right"></i>
             </button>
           </form>
-        </section>
-        <aside className="img-container"></aside>
-      </main>
+          {/* Mensagem de feedback */}
+          <p className="login-message-feedback" style={{ color: registerMessage.includes("sucesso") ? "limegreen" : "#e74c3c" }}>
+            {registerMessage}
+          </p>
+        
+        </div>
+        <div className="image-container">
+          <img src={imgArte} alt="Arte da Atlética" />
+        </div>
+      </div>
     </div>
+    </>
   );
-};
-
-export default CadastroEquipe;
+}

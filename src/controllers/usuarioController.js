@@ -1,4 +1,4 @@
-const { Usuario, Jogador } = require('../models');
+const { Usuario, Jogador, Equipe } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const helpers = require('../utils/helpers');
@@ -108,6 +108,15 @@ module.exports = {
         if (perfilJogador) usuario.perfil_jogador = perfilJogador;
       }
 
+      let perfilOrganizador = null;
+      if (usuario.dataValues.papel === 'organizador') {
+        // busca a equipe criada por este usuário (1 para 1)
+        perfilOrganizador = await usuario.getEquipe_criada();
+
+        // Anexa perfilOrganizador ao usuário
+        if (perfilOrganizador) usuario.perfil_organizador = perfilOrganizador;
+      }
+
       // Gera o token JWT (sem alterações)
       const token = jwt.sign(
         { id: usuario.id, papel: usuario.papel, nome_usuario: usuario.nome_usuario },
@@ -123,10 +132,10 @@ module.exports = {
           nome_usuario: usuario.nome_usuario,
           email: usuario.email,
           papel: usuario.papel,
-          ...(perfilJogador && { perfil_jogador: perfilJogador.toJSON() })
+          ...(perfilJogador && { perfil_jogador: perfilJogador.toJSON() }),
+          ...(perfilOrganizador && { perfil_organizador: perfilOrganizador.toJSON() })
         }
       });
-
     } catch (err) {
       console.error("ERRO CRÍTICO NO LOGIN:", err)
       return res.status(500).json({ error: "Ocorreu um erro interno no servidor." });

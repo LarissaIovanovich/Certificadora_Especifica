@@ -1,18 +1,24 @@
 const { Equipe, Jogador, sequelize } = require('../models');
+const helpers = require('../utils/helpers');
 
 module.exports = {
- 
+
   async create(req, res) {
     const t = await sequelize.transaction();
     try {
       const { nome, tag, url_logo, jogadores } = req.body;
+
       if (!jogadores || jogadores.length === 0) {
         throw new Error("A equipe precisa de pelo menos um jogador.");
       }
+
+      const logoFileName = helpers.handleLogoUpload(url_logo, tag);
+
+      // Criação da equipe
       const novaEquipe = await Equipe.create({
         nome,
         tag,
-        url_logo,
+        url_logo: `/img/equipe-logo/${logoFileName}`,
         criado_por: req.user ? req.user.id : null
       }, { transaction: t });
 
@@ -22,7 +28,7 @@ module.exports = {
         tag_line: novaEquipe.tag,
         riot_id: `${jogador.apelido}#${novaEquipe.tag}`
       }));
-      
+
       await Jogador.bulkCreate(jogadoresParaCriar, { transaction: t });
       await t.commit();
       res.status(201).json(novaEquipe);
@@ -34,7 +40,6 @@ module.exports = {
     }
   },
 
-  
   async list(req, res) {
     try {
       const equipes = await Equipe.findAll();
@@ -43,7 +48,6 @@ module.exports = {
       res.status(500).json({ error: err.message });
     }
   },
-
 
   async getById(req, res) {
     try {

@@ -16,5 +16,6 @@ router.post('/login', usersController.login);
 router.get('/', authMiddleware, requireRole(['admin', 'organizador']), usersController.list);
 router.get('/:id', authMiddleware, requireRole(['admin', 'organizador']), usersController.getById);
 router.post('/profile', authMiddleware, usersController.createProfile);
+router.put('/', authMiddleware, usersController.edit);
 
 module.exports = router;

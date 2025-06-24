@@ -14,9 +14,8 @@ export default function CadastroEquipePage() {
   const [nomeEquipe, setNomeEquipe] = useState('');
   const [tag, setTag] = useState('');
   const [imagemEquipe, setImagemEquipe] = useState(null);
-  const [imagemPreview, setImagemPreview] = useState('');
+  const [imagemPreview, setImagemPreview] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf9IlIoDAoMWCaofQ6rp1WgGBgBALXhNk-3w&s');
   const navigate = useNavigate(); 
-
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -150,10 +149,8 @@ export default function CadastroEquipePage() {
               onChange={(e) => setTag(e.target.value)}
               maxLength="10"
               required
-            />
-            {/* corrigir base 64 erro de requst muito grande*/}
-            {/* 
-              <label>IMAGEM DA EQUIPE</label>
+            />            
+            <label>IMAGEM DA EQUIPE</label>
             <div className="upload-box" style={{display: 'flex' ,flexDirection: 'column'}}>
               <img id="previewImagem" src={imagemPreview} alt="Upload imagem equipe"  style={{width: 250, height: 250}}/>
               <input type="file" id="uploadImagem" onChange={handleImagemChange} accept="image/*"/>
@@ -164,7 +161,6 @@ export default function CadastroEquipePage() {
                 <button type="button" className="remover" onClick={handleRemoverImagem}>REMOVER</button>
               </div>
             )}
-            */}
 
             <label>INTEGRANTES</label>
             <div className="integrante-inputs">

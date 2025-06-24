@@ -101,6 +101,15 @@ module.exports = {
     
     console.log('Conclusão: Senha VÁLIDA. Gerando token...');
 
+    // Busca o perfil do jogador (caso necessário)
+    let perfilJogador = null;
+    if (usuario.dataValues.papel === 'jogador') {
+      perfilJogador = await Jogador.findOne({ where: { usuario_id: usuario.id } });
+
+      // Anexa perfilJogador ao usuário
+      if (perfilJogador) usuario.perfil_jogador = perfilJogador;
+    }
+
     // Gera o token JWT (sem alterações)
     const token = jwt.sign(
       { id: usuario.id, papel: usuario.papel, nome_usuario: usuario.nome_usuario },
@@ -115,7 +124,8 @@ module.exports = {
         id: usuario.id,
         nome_usuario: usuario.nome_usuario,
         email: usuario.email,
-        papel: usuario.papel
+        papel: usuario.papel,
+        ...(perfilJogador && { perfil_jogador: perfilJogador.toJSON() })
       }
     });
 

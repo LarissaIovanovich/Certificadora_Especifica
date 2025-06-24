@@ -30,7 +30,11 @@ export default function MinhaEquipePage() {
     else if (user && user.perfil_jogador) {
       navigate('/equipes');
     }
-    // Se for um organizador...
+    // Se for um organizador com uma equipe...
+    else if (user && user.papel === 'organizador' && user.perfil_organizador) {
+      navigate(`/equipe/${user.perfil_organizador.id}`);
+    }
+    // Se for um organizador sem uma equipe...
     else if (user && user.papel === 'organizador') {
       navigate('/cadastro');
     }

@@ -1,8 +1,8 @@
-const { Equipe, Jogador, sequelize } = require('../models');
+const { Equipe, Jogador, Convite, sequelize } = require('../models');
 const helpers = require('../utils/helpers');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
-
   async create(req, res) {
     const t = await sequelize.transaction();
     try {
@@ -66,6 +66,32 @@ module.exports = {
     } catch (err) {
       console.error(`Erro ao buscar equipe com ID ${req.params.id}:`, err);
       res.status(500).json({ error: err.message });
+    }
+  },
+
+  async generateInviteLink(req, res) {
+    try {
+      // obtém equipe criada pelo usuário autenticado
+      const equipe = await req.user.getEquipe_criada();
+
+      if (!equipe) {
+        return res.status(404).json({ error: 'Equipe não encontrada' });
+      }
+
+      // gera token único e cria convite
+      const token = uuidv4();
+      const convite = await Convite.create({
+        equipe_id: equipe.dataValues.id,
+        token,
+        status: 'pendente'
+      });
+
+      const url = `/invite/${token}`;
+
+      return res.json({ conviteId: convite.id, url });
+    } catch (err) {
+      console.error('Erro ao gerar convite:', err);
+      return res.status(500).json({ error: 'Erro ao gerar convite' });
     }
   }
 };

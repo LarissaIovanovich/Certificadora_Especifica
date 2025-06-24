@@ -1,6 +1,7 @@
 const Jogador = require('../models/Jogador');
 const Usuario = require('../models/Usuario');
 const Equipe = require('../models/Equipe');
+const Convite = require('../models/Convite');
 
 module.exports = {
   async create(req, res) {
@@ -95,6 +96,36 @@ module.exports = {
     } catch (err) {
       console.error(err);
       return res.status(400).json({ error: err.message });
+    }
+  },
+
+  async acceptInviteLink(req, res) {
+    try {
+      const { token } = req.params;
+
+      const convite = await Convite.findOne({ where: { token, status: 'pendente' } });
+      if (!convite) {
+        return res.status(400).json({ error: 'Convite inválido ou já utilizado.' });
+      }
+
+      const usuarioId = req.user.id;
+      const jogador = await Jogador.findOne({ where: { usuario_id: usuarioId } });
+      if (!jogador) {
+        return res.status(404).json({ error: 'Perfil de jogador não encontrado.' });
+      }
+
+      // atualiza equipe do jogador com o ID da equipe do convite
+      jogador.equipe_id = convite.equipe_id;
+      await jogador.save();
+
+      // setta convite como aceito
+      convite.status = 'aceito';
+      await convite.save();
+
+      return res.json({ message: 'Convite aceito com sucesso!', equipe_id: convite.equipe_id });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Erro ao aceitar convite.' });
     }
   }
 };

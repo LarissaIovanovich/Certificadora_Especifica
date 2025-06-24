@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { createTeam } from '../services/api'; 
+import { useNavigate } from 'react-router-dom'; 
+import api from '../services/api'; 
 import './CadastroEquipe.module.css';
 
 const CadastroEquipe = () => {
-  // Estados para o formulário da equipe
+  const navigate = useNavigate(); 
+
+  
   const [nomeEquipe, setNomeEquipe] = useState('');
   const [tag, setTag] = useState('');
   const [imagemEquipe, setImagemEquipe] = useState(null);
   const [imagemPreview, setImagemPreview] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf9IlIoDAoMWCaofQ6rp1WgGBgBALXhNk-3w&s');
-  
-  // Estados para a lista de jogadores (integrantes)
   const [integrantes, setIntegrantes] = useState([]);
-  
-  // Estados para os inputs de um novo integrante
   const [nomeIntegrante, setNomeIntegrante] = useState('');
   const [nicknameIntegrante, setNicknameIntegrante] = useState('');
-  const [posicaoIntegrante, setPosicaoIntegrante] = useState('Duelista'); // Adicionado estado para posição
+  const [posicaoIntegrante, setPosicaoIntegrante] = useState('Duelista');
+
 
   const handleImagemChange = (e) => {
     const file = e.target.files[0];
@@ -38,46 +38,37 @@ const CadastroEquipe = () => {
     return integrantes.some((i, idx) => i.nickname.toLowerCase() === nickname.toLowerCase() && idx !== ignorarIndex);
   };
 
-  // Atualizado para incluir a posição
   const handleAdicionarIntegrante = () => {
     if (!nomeIntegrante || !nicknameIntegrante || !posicaoIntegrante) {
       alert('Preencha nome, nickname e posição do integrante.');
       return;
     }
-
     if (nicknameExiste(nicknameIntegrante)) {
       alert('Nickname já existe na equipe.');
       return;
     }
-    
-    // Adiciona o integrante com sua posição
     setIntegrantes([...integrantes, { nome: nomeIntegrante, nickname: nicknameIntegrante, posicao: posicaoIntegrante }]);
-    
-    // Limpa os campos
     setNomeIntegrante('');
     setNicknameIntegrante('');
-    setPosicaoIntegrante('Duelista'); // Reseta para o valor padrão
+    setPosicaoIntegrante('Duelista');
   };
 
-  // Atualizado para incluir a posição
   const handleEditarIntegrante = (index) => {
     const integrante = integrantes[index];
     const novoNome = prompt('Novo nome do integrante:', integrante.nome);
     const novoNickname = prompt('Novo nickname:', integrante.nickname);
     const novaPosicao = prompt('Nova posição (Duelista, Controlador, Iniciador, Sentinela, Flex):', integrante.posicao);
 
-
     if (novoNome && novoNickname && novaPosicao) {
       if (nicknameExiste(novoNickname, index)) {
         alert('Este nickname já está em uso por outro integrante.');
         return;
       }
-
       const novosIntegrantes = [...integrantes];
       novosIntegrantes[index] = {
         nome: novoNome.trim(),
         nickname: novoNickname.trim(),
-        posicao: novaPosicao.trim() // Salva a nova posição
+        posicao: novaPosicao.trim()
       };
       setIntegrantes(novosIntegrantes);
     }
@@ -88,22 +79,20 @@ const CadastroEquipe = () => {
     setIntegrantes(novosIntegrantes);
   };
 
-  // *** LÓGICA DE SUBMISSÃO ***
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validação básica
     if (!nomeEquipe || !tag) {
         alert("O nome e a tag da equipe são obrigatórios.");
         return;
     }
-    if (integrantes.length < 5) { // Pode-se exigir um número mínimo, ex: 5
+    if (integrantes.length < 5) {
         alert("A equipe deve ter pelo menos 5 jogadores.");
         return;
     }
 
     try {
-      // Objeto que será enviado para a API
       const equipeData = {
         nome: nomeEquipe,
         tag: tag,
@@ -111,17 +100,16 @@ const CadastroEquipe = () => {
         jogadores: integrantes.map(intg => ({
           apelido: intg.nickname,
           posicao: intg.posicao,
-          // O backend irá gerar o riot_id, tag_line, etc. com base nestes dados
         }))
       };
 
-      // A função createTeam agora envia o objeto completo
-      await createTeam(equipeData);
+    
+      await api.post('/equipes', equipeData);
 
       alert("Equipe e jogadores cadastrados com sucesso!");
       setTimeout(() => {
-        // Limpar o formulário ou redirecionar
-        window.location.reload(); 
+        
+        navigate('/equipes');
       }, 1000);
 
     } catch (error) {
@@ -181,7 +169,6 @@ const CadastroEquipe = () => {
                 value={nicknameIntegrante}
                 onChange={(e) => setNicknameIntegrante(e.target.value)}
               />
-              {/* CAMPO DE SELEÇÃO PARA A POSIÇÃO */}
               <select 
                 value={posicaoIntegrante} 
                 onChange={(e) => setPosicaoIntegrante(e.target.value)}
@@ -200,7 +187,6 @@ const CadastroEquipe = () => {
             <ul id="listaIntegrantes">
               {integrantes.map((intg, index) => (
                 <li key={index}>
-                  {/* Mostra a posição do jogador na lista */}
                   <span>{intg.nome} (<strong>{intg.nickname}</strong>) - {intg.posicao}</span>
                   <div>
                     <button type="button" onClick={() => handleEditarIntegrante(index)}>EDITAR</button>

@@ -64,8 +64,7 @@
   text-align: left;
   color: #fff;
   padding: 1rem;
-  /* Margem interna */
-  /* Sem bordas internas */
+
 }
 
 .match-results th {
@@ -116,8 +115,6 @@
   text-align: left;
   color: #fff;
   padding: 1rem;
-  /* Margem interna */
-  /* Sem bordas internas */
 }
 
 .total-score th {

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import "./LoginPage.css"; 
-import { register } from '../services/api';
+// import { register } from '../services/api'; // CORREÇÃO: Removida a importação antiga e incorreta.
 import imgArte from '../assets/IMG.jpg';
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom"; // Importa o useNavigate
+import api from '../services/api'; // A única importação necessária do serviço de API
 
 export default function SignInPage() { 
   const [userName, setUserName] = useState("");
@@ -13,12 +13,13 @@ export default function SignInPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registerMessage, setRegisterMessage] = useState("");
 
+  const navigate = useNavigate(); // Hook para navegação
+
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  // MUDANÇA : Lógica do handleSubmit totalmente corrigida
   const handleSubmit = async (e) => {
     e.preventDefault();
     setRegisterMessage("");
@@ -31,6 +32,10 @@ export default function SignInPage() {
       setRegisterMessage("As senhas não coincidem.");
       return;
     }
+    if (password.length < 8) {
+      setRegisterMessage("A senha deve ter no mínimo 8 caracteres.");
+      return;
+    }
 
     try {
       const data = {
@@ -39,20 +44,24 @@ export default function SignInPage() {
         senha: password 
       };
       
-      await register(data); 
+      // CORREÇÃO: A chamada da API agora usa o 'api' importado com o método e a URL correta.
+      await api.post('/users/register', data); 
       
       setRegisterMessage("Cadastro realizado com sucesso! Redirecionando para o login...");
+      
+      // Usa o 'navigate' para uma transição mais suave, em vez de recarregar a página
       setTimeout(() => {
-        window.location.href = "/login";
+        navigate("/login");
       }, 2000);
 
     } catch (error) {
       const errorMessage = error.response?.data?.error || "Erro ao criar conta. Tente novamente.";
       setRegisterMessage(errorMessage);
-      console.log(error);
+      console.error("Erro no cadastro:", error);
     }
   };
 
+  // O JSX (parte visual) continua o mesmo, pois já estava correto.
   return (
     <div className="login-page-wrapper">
       <div className="background-overlay" />
@@ -72,7 +81,7 @@ export default function SignInPage() {
               />
             </div>
             <div className="input-group">
-              <FaEnvelope /> {/* Ícone de e-mail */}
+              <FaEnvelope />
               <input
                 type="email"
                 placeholder="Email"
@@ -103,11 +112,9 @@ export default function SignInPage() {
             </div>
             <button type="submit">CRIAR</button>
           </form>
-          {/* Mensagem de feedback */}
           <p className="login-message-feedback" style={{ color: registerMessage.includes("sucesso") ? "limegreen" : "#e74c3c" }}>
             {registerMessage}
           </p>
-          {/* Link para voltar para a página de login */}
           <p className="signup-link">
             Já tem uma conta? <Link to="/login">Faça Login</Link>
           </p>

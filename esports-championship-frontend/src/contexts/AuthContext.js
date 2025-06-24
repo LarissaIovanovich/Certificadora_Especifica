@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { login as apiLogin } from '../services/api';
-import { jwtDecode } from 'jwt-decode';
+import api from '../services/api'; 
+import { jwtDecode } from 'jwt-decode'; 
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -8,15 +9,21 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadUserFromStorage() {
-      const token = localStorage.getItem('token');
+    function loadUserFromStorage() {
+    
+      const token = localStorage.getItem('authToken'); 
+
       if (token) {
         try {
           const decodedUser = jwtDecode(token);
-          setUser({ id: decodedUser.id, papel: decodedUser.papel, nome_usuario: decodedUser.nome_usuario });
+          if (decodedUser.exp * 1000 > Date.now()) {
+            setUser({ id: decodedUser.id, papel: decodedUser.papel, nome_usuario: decodedUser.nome_usuario });
+          } else {
+            localStorage.removeItem('authToken'); // Remove se expirou
+          }
         } catch (error) {
-          console.error("Token inválido:", error);
-          localStorage.removeItem('token');
+          console.error("Token inválido no storage:", error);
+          localStorage.removeItem('authToken'); // Remove se for inválido
         }
       }
       setLoading(false);
@@ -26,12 +33,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, senha) => {
     try {
-      const response = await apiLogin({ email, senha });
+      const response = await api.post('/users/login', { email, senha });
       const { token, usuario } = response.data;
 
-      localStorage.setItem('token', token);
+    
+      localStorage.setItem('authToken', token);
+      
       setUser(usuario);
       return { success: true };
+
     } catch (error) {
       console.error("Erro no login:", error);
       return { success: false, message: error.response?.data?.error || "Credenciais inválidas." };
@@ -39,14 +49,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+   
+    localStorage.removeItem('authToken');
     setUser(null);
     window.location.href = '/login';
   };
 
   return (
     <AuthContext.Provider value={{ isAuthenticated: !!user, user, login, logout, loading }}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

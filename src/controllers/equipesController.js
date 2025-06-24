@@ -60,7 +60,7 @@ module.exports = {
       res.json(equipe);
 
     } catch (err) {
-      console.error(`Erro ao buscar equipe com ID ${req.params.id}:`, err); // Log mais específico
+      console.error(`Erro ao buscar equipe com ID ${req.params.id}:`, err);
       res.status(500).json({ error: err.message });
     }
   }

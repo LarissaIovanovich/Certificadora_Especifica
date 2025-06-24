@@ -40,7 +40,4 @@ module.exports = {
       return res.status(500).json({ error: "Ocorreu um erro ao salvar o perfil." });
     }
   },
-
-
-  // ... podemos adicionar outros métodos aqui no futuro (listar, editar, etc.)
 };

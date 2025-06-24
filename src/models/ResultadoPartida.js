@@ -48,7 +48,7 @@ const ResultadoPartida = sequelize.define('ResultadoPartida', {
     defaultValue: false // Por padrão, um jogador não é o MVP
   }
 }, {
-  tableName: 'resultados_partida', // 2. Nome da tabela explícito
+  tableName: 'resultados_partida', 
   timestamps: false
 });
 

@@ -45,10 +45,9 @@ export default function MinhaEquipePage() {
     if (!window.confirm(confirmMsg)) return;
 
     setShowModal(false);
-
     try {
       const response = await api.put('/users', { papel: selectedRole });
-      setUser({ ...user, papel: 'jogador' });
+      setUser({ ...user, papel: selectedRole });
 
       if (response.status !== 200) {
         alert('Erro ao atualizar papel do usuário.');

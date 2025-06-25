@@ -53,7 +53,7 @@ export default function CriarCampeonato() {
       
       setTimeout(() => {
         
-        navigate('/equipes');
+        navigate('/admin/torneios');
       }, 1000);
 
     } catch (error) {
@@ -153,71 +153,6 @@ export default function CriarCampeonato() {
         </div>
       </div>
     </div>
-    </>
-  );
-
-  return (
-    <>
-        <FuriaNav />
-      <div className="background-overlay"></div>
-      <div className="main-container">
-        <div className="login-container">
-          <h1 className="title">ATLÉTICA FÚRIA UTFPR</h1>
-          <p className="subtitle">CRIAR CAMPEONATO</p>
-
-          <form id="createChampionshipForm" onSubmit={handleSubmit}>
-            <div className="input-group">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="lucide lucide-flag"
-                width="20"
-                height="20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path d="M4 22V2m0 0h15l-4 6 4 6H4" />
-              </svg>
-
-              <input
-                type="text"
-                placeholder="Nome do Campeonato"
-                id="champName"
-                value={champName}
-                onChange={(e) => setChampName(e.target.value)}
-                required
-              />
-            </div>
-
-            <button type="submit">CRIAR</button>
-            <button
-              type="button"
-              id="cancelButton"
-              className="cancel-btn"
-              onClick={handleCancel}
-            >
-              CANCELAR
-            </button>
-          </form>
-
-          <p
-            id="createMessage"
-            style={{
-              color: messageColor,
-              opacity: animate ? 1 : 0,
-              transform: animate ? "translateY(0)" : "translateY(-5px)",
-              transition: "opacity 0.3s, transform 0.3s",
-            }}
-          >
-            {message}
-          </p>
-        </div>
-
-        <div className="image-container">
-          <img src={imgArte} alt="Arte da Atlética" />
-        </div>
-      </div>
     </>
   );
 }

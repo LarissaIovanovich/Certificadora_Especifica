@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
+import FuriaNav from './FuriaNav';
 
 export default function MinhaEquipePage() {
   const { user, setUser, loading } = useAuth();
@@ -69,6 +70,7 @@ export default function MinhaEquipePage() {
 
   return (
     <div>
+      <FuriaNav></FuriaNav>
       Verificando seu perfil...
       {showModal && (
         <div style={{

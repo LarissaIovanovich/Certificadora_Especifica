@@ -55,6 +55,23 @@ export default function AdminListaTorneios() {
           ) : (
             <table className={styles.table}>
               <thead>
+              <button
+                style={{
+                  flex: "1 1 30%",
+                  backgroundColor: "transparent",
+                  border: "2px solid #f5c400",
+                  textDecoration: "none",
+                  color: "#ffff",
+                  padding: "6px",
+                  borderRadius: "8px",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                  transition: "background-color 0.3s ease, color 0.3s ease",
+                  textAlign: "center",
+                  marginBottom: 20
+                }}
+                onClick={() => window.location.href = "/admin/criar-torneio"}
+              >Criar torneio</button>
                 <tr>
                   <th>ID</th>
                   <th>Nome do Torneio</th>

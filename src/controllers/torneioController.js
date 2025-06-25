@@ -19,6 +19,7 @@ module.exports = {
     }
   },
 
+ 
   async list(req, res) {
     try {
       const torneios = await Torneio.findAll();
@@ -28,19 +29,26 @@ module.exports = {
     }
   },
 
+
   async getById(req, res) {
     try {
       const id = req.params.id;
       const torneio = await Torneio.findByPk(id, {
-        include: [{
-          model: Equipe,
-          as: 'equipes',
-          through: { attributes: ['status_inscricao'] }, 
-          include: [{
-            model: Jogador,
-            as: 'jogadores'
-          }]
-        }]
+        include: [
+          {
+            model: Equipe,
+            as: 'equipes',
+            through: { attributes: ['status_inscricao'] }, 
+            include: [{
+              model: Jogador,
+              as: 'jogadores'
+            }]
+          },
+          {
+            model: Partida,
+            as: 'partidas' 
+          }
+        ]
       });
 
       if (!torneio) {
@@ -53,6 +61,7 @@ module.exports = {
     }
   },
 
+ 
   async gerarChaveamento(req, res) {
     try {
         const { id: torneio_id } = req.params;
@@ -110,6 +119,7 @@ module.exports = {
     }
   },
 
+  
   async atualizarStatusInscricao(req, res) {
     try {
         const { torneioId, equipeId } = req.params;
@@ -133,7 +143,7 @@ module.exports = {
     }
   },
 
-  // --- ADIÇÃO DA NOVA FUNÇÃO PARA INSCREVER UMA EQUIPE ---
+ 
   async inscreverEquipe(req, res) {
     try {
         const { id: torneio_id } = req.params;
@@ -153,13 +163,11 @@ module.exports = {
             return res.status(404).json({ error: 'Equipe não encontrada.' });
         }
         
-        // O método 'addEquipe' vem da associação Many-to-Many definida nos modelos.
         await torneio.addEquipe(equipe);
 
         return res.status(201).json({ message: 'Equipe inscrita com sucesso no torneio!' });
 
     } catch (err) {
-        // Trata erros, como uma equipe que já está inscrita.
         if (err.name === 'SequelizeUniqueConstraintError') {
             return res.status(409).json({ error: 'Esta equipe já está inscrita neste torneio.' });
         }

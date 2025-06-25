@@ -16,6 +16,7 @@ import MinhaEquipePage from './components/MinhaEquipePage';
 import AdminTorneioDetalhesPage from './components/AdminTorneioDetalhesPage';
 import AdminListaTorneios from './components/AdminListaTorneios';
 import AceitarConvitePage from './components/AceitarConvitePage';
+import RelatorioPartidaPage from './components/RelatorioPartidaPage'; 
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/chaveamento" element={<ChaveamentoPage />} />
           <Route path="/partidas" element={<PartidasPage />} />
           <Route path="/placar" element={<PlacarPage />} />
+          <Route path="/partidas/:id/relatorio" element={<RelatorioPartidaPage />} />
           <Route
             path="/admin/torneio/:id"
             element={
@@ -69,8 +71,6 @@ function App() {
             element={<ProtectedRoute><InscricaoPage /></ProtectedRoute>}
           />
           <Route path="/invite/:token" element={<ProtectedRoute><AceitarConvitePage /></ProtectedRoute>} />
-
-          {/* --- Rota de Redirecionamento para o Login --- */}
         </Routes>
       </AuthProvider>
     </Router>

@@ -9,7 +9,7 @@ const Partida = sequelize.define('Partida', {
   },
   torneio_id: {
     type: DataTypes.INTEGER,
-    allowNull: false, // Uma partida deve pertencer a um torneio
+    allowNull: false,
     references: {
       model: 'torneios',
       key: 'id'
@@ -17,7 +17,7 @@ const Partida = sequelize.define('Partida', {
   },
   equipe_a_id: {
     type: DataTypes.INTEGER,
-    allowNull: false, // Partida deve ter uma equipe A
+    allowNull: false,
     references: {
       model: 'equipes',
       key: 'id'
@@ -25,7 +25,7 @@ const Partida = sequelize.define('Partida', {
   },
   equipe_b_id: {
     type: DataTypes.INTEGER,
-    allowNull: false, // Partida deve ter uma equipe B
+    allowNull: false,
     references: {
       model: 'equipes',
       key: 'id'
@@ -33,7 +33,7 @@ const Partida = sequelize.define('Partida', {
   },
   equipe_vencedora_id: {
     type: DataTypes.INTEGER,
-    allowNull: true, // Pode ser nulo até a partida acabar
+    allowNull: true,
     references: {
       model: 'equipes',
       key: 'id'
@@ -65,36 +65,35 @@ const Partida = sequelize.define('Partida', {
   timestamps: false
 });
 
-// 3. Definição das associações
+
 Partida.associate = (models) => {
-  // Uma partida pertence a um torneio
+
   Partida.belongsTo(models.Torneio, {
     foreignKey: 'torneio_id',
     as: 'torneio'
   });
 
-  // Múltiplas associações com a mesma tabela Equipe, usando apelidos (as)
+
   Partida.belongsTo(models.Equipe, {
     foreignKey: 'equipe_a_id',
-    as: 'equipeA' // nome para a equipe A
+    as: 'equipeA' 
   });
 
   Partida.belongsTo(models.Equipe, {
     foreignKey: 'equipe_b_id',
-    as: 'equipeB' // nome para a equipe B
+    as: 'equipeB' 
   });
 
   Partida.belongsTo(models.Equipe, {
     foreignKey: 'equipe_vencedora_id',
-    as: 'vencedor' // nome para a equipe vencedora
+    as: 'vencedor' 
   });
   
  
-  Partida.hasOne(models.ResultadoPartida, { 
+  Partida.hasMany(models.ResultadoPartida, { 
     foreignKey: 'partida_id',
-    as: 'resultado'
+    as: 'resultados' 
   });
 };
-
 
 module.exports = Partida;

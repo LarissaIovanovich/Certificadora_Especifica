@@ -2,6 +2,7 @@ const { Partida, ResultadoPartida, Jogador, Equipe, Torneio, sequelize } = requi
 const { Op } = require('sequelize');
 
 module.exports = {
+  
   async create(req, res) {
     try {
       const partida = await Partida.create(req.body);
@@ -11,6 +12,7 @@ module.exports = {
     }
   },
 
+ 
   async list(req, res) {
     try {
       const { equipe_id, torneio_id } = req.query;
@@ -19,12 +21,10 @@ module.exports = {
       let include = [];
 
       if (equipe_id) {
-        // Retorna partidas onde a equipe é 'A' OU 'B'
         where[Op.or] = [
           { equipe_a_id: equipe_id },
           { equipe_b_id: equipe_id }
         ];
-        // Inclui dados das duas equipes
         include.push(
           { model: Equipe, as: 'equipeA', attributes: ['id', 'nome', 'tag', 'url_logo'] },
           { model: Equipe, as: 'equipeB', attributes: ['id', 'nome', 'tag', 'url_logo'] }
@@ -45,56 +45,89 @@ module.exports = {
     }
   },
 
+
   async getRelatorioPartida(req, res) {
     try {
       const { id } = req.params;
 
-      // busca resultados da partida e inclui os jogadores
-      const resultados = await ResultadoPartida.findAll({
-        where: { partida_id: id },
-        include: [{ model: Jogador, as: 'jogador', attributes: ['id', 'apelido', 'usuario_id'] }]
+     
+      const partida = await Partida.findByPk(id, {
+        include: [
+    
+          { model: Equipe, as: 'equipeA' },
+          
+          { model: Equipe, as: 'equipeB' },
+          
+          {
+            model: ResultadoPartida,
+            as: 'resultados',
+            include: [{ model: Jogador, as: 'jogador' }]
+          }
+        ]
       });
 
-      if (!resultados.length) {
-        return res.status(404).json({ error: 'Nenhum resultado encontrado para esta partida.' });
+      if (!partida || !partida.resultados) {
+        return res.status(404).json({ error: 'Nenhum dado encontrado para esta partida.' });
       }
 
-      // Calcula totais e MVP
-      let totalAbates = 0, totalMortes = 0, totalAssistencias = 0;
-      let mvp = null, maiorAbates = -1;
-      const destaques = resultados.map(r => {
-        totalAbates += r.abates;
-        totalMortes += r.mortes;
-        totalAssistencias += r.assistencias;
-        if (r.mvp) mvp = r.jogador;
-        if (r.abates > maiorAbates) maiorAbates = r.abates;
-        return {
-          jogador: r.jogador,
+ 
+      const jogadoresEquipeA = partida.resultados
+        .filter(r => r.jogador && r.jogador.equipe_id === partida.equipe_a_id)
+        .map(r => ({
+          jogador_id: r.jogador.id,
+          nome: r.jogador.apelido,
           abates: r.abates,
           mortes: r.mortes,
           assistencias: r.assistencias,
-          agente_usado: r.agente_usado,
-          mvp: r.mvp
-        };
-      });
+          agente: r.agente_usado,
+          mvp: Boolean(r.mvp)
+        }));
 
-      // Jogadores com mais abates (caso não tenha MVP marcado)
-      const topFraggers = destaques.filter(d => d.abates === maiorAbates);
+      const jogadoresEquipeB = partida.resultados
+        .filter(r => r.jogador && r.jogador.equipe_id === partida.equipe_b_id)
+        .map(r => ({
+          jogador_id: r.jogador.id,
+          nome: r.jogador.apelido,
+          abates: r.abates,
+          mortes: r.mortes,
+          assistencias: r.assistencias,
+          agente: r.agente_usado,
+          mvp: Boolean(r.mvp)
+        }));
 
-      res.json({
-        partida_id: id,
-        totalAbates,
-        totalMortes,
-        totalAssistencias,
-        mvp: mvp || (topFraggers.length === 1 ? topFraggers[0].jogador : null),
-        destaques,
-        topFraggers: topFraggers.map(d => d.jogador)
-      });
+ 
+      const relatorioFinal = {
+        partida_id: partida.id,
+        mapa: partida.mapa,
+        status: partida.status,
+        agendada_para: partida.agendada_para,
+        equipeA: {
+          id: partida.equipeA.id,
+          nome: partida.equipeA.nome,
+          tag: partida.equipeA.tag,
+          url_logo: partida.equipeA.url_logo,
+          pontuacao: partida.pontuacao_a,
+          jogadores: jogadoresEquipeA
+        },
+        equipeB: {
+          id: partida.equipeB.id,
+          nome: partida.equipeB.nome,
+          tag: partida.equipeB.tag,
+          url_logo: partida.equipeB.url_logo,
+          pontuacao: partida.pontuacao_b,
+          jogadores: jogadoresEquipeB
+        }
+      };
+
+      res.status(200).json(relatorioFinal);
+
     } catch (err) {
+      console.error("Erro ao gerar relatório da partida:", err);
       res.status(500).json({ error: 'Erro ao gerar relatório da partida.' });
     }
   },
 
+  
   async getById(req, res) {
     try {
       const partida = await Partida.findByPk(req.params.id);
@@ -105,7 +138,7 @@ module.exports = {
     }
   },
 
-  // Função para um admin registrar o resultado de uma partida
+ 
   async registrarResultado(req, res) {
     const t = await sequelize.transaction();
     try {
@@ -125,7 +158,6 @@ module.exports = {
       partida.status = 'Finalizada';
 
       await partida.save({ transaction: t });
-
       await ResultadoPartida.destroy({ where: { partida_id: id }, transaction: t });
 
       const resultadosParaCriar = resultados_jogadores.map(resultado => ({
@@ -134,7 +166,6 @@ module.exports = {
       }));
 
       await ResultadoPartida.bulkCreate(resultadosParaCriar, { transaction: t });
-
       await t.commit();
       res.status(200).json({ message: 'Resultado da partida registrado com sucesso.' });
 
@@ -145,7 +176,7 @@ module.exports = {
     }
   },
 
-  // Função para buscar o resultado completo e público de uma partida
+ 
   async getResultado(req, res) {
     try {
       const { id } = req.params;
@@ -160,13 +191,10 @@ module.exports = {
           }
         ]
       });
-
       if (!partida) {
         return res.status(404).json({ error: 'Resultado da partida não encontrado.' });
       }
-
       res.status(200).json(partida);
-
     } catch (err) {
       console.error("Erro ao buscar resultado:", err);
       res.status(500).json({ error: 'Ocorreu um erro ao buscar o resultado da partida.' });

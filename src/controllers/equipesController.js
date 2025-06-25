@@ -8,9 +8,9 @@ module.exports = {
     try {
       const { nome, tag, url_logo, jogadores } = req.body;
 
-      if (!jogadores || jogadores.length === 0) {
-        throw new Error("A equipe precisa de pelo menos um jogador.");
-      }
+      // if (!jogadores || jogadores.length === 0) {
+      //   throw new Error("A equipe precisa de pelo menos um jogador.");
+      // }
 
       const logoFileName = helpers.handleLogoUpload(url_logo, tag);
 
@@ -22,17 +22,16 @@ module.exports = {
         criado_por: req.user ? req.user.id : null
       }, { transaction: t });
 
-      const jogadoresParaCriar = jogadores.map(jogador => ({
-        ...jogador,
-        equipe_id: novaEquipe.id,
-        tag_line: novaEquipe.tag,
-        riot_id: `${jogador.apelido}#${novaEquipe.tag}`
-      }));
+      // const jogadoresParaCriar = jogadores.map(jogador => ({
+      //   ...jogador,
+      //   equipe_id: novaEquipe.id,
+      //   tag_line: novaEquipe.tag,
+      //   riot_id: `${jogador.apelido}#${novaEquipe.tag}`
+      // }));
 
-      await Jogador.bulkCreate(jogadoresParaCriar, { transaction: t });
+      // await Jogador.bulkCreate(jogadoresParaCriar, { transaction: t });
       await t.commit();
       res.status(201).json(novaEquipe);
-
     } catch (err) {
       await t.rollback();
       console.error(err);

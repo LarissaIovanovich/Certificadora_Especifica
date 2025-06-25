@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./LoginPage.css"; 
 import imgArte from '../assets/IMG.jpg';
 import { useNavigate } from 'react-router-dom'; 
+import { useAuth } from "../contexts/AuthContext";
 import api from '../services/api'; 
 import FuriaNav from "./FuriaNav";
 
@@ -16,6 +17,7 @@ export default function CadastroEquipePage() {
   const [imagemEquipe, setImagemEquipe] = useState(null);
   const [imagemPreview, setImagemPreview] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf9IlIoDAoMWCaofQ6rp1WgGBgBALXhNk-3w&s');
   const navigate = useNavigate(); 
+  const { user } = useAuth();
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -91,10 +93,11 @@ export default function CadastroEquipePage() {
         alert("O nome e a tag da equipe são obrigatórios.");
         return;
     }
-    if (integrantes.length < 5) {
-        alert("A equipe deve ter pelo menos 5 jogadores.");
-        return;
-    }
+
+    // if (integrantes.length < 5) {
+    //     alert("A equipe deve ter pelo menos 5 jogadores.");
+    //     return;
+    // }
 
     try {
       const equipeData = {
@@ -107,7 +110,8 @@ export default function CadastroEquipePage() {
         }))
       };
     
-      await api.post('/equipes', equipeData);
+      const response = await api.post('/equipes', equipeData);
+      user.perfil_organizador = response.data;
 
       alert("Equipe e jogadores cadastrados com sucesso!");
       setTimeout(() => {
@@ -162,6 +166,8 @@ export default function CadastroEquipePage() {
               </div>
             )}
 
+            {/* Por ora são adicionados apenas via link de convite
+
             <label>INTEGRANTES</label>
             <div className="integrante-inputs">
               <input
@@ -190,6 +196,7 @@ export default function CadastroEquipePage() {
                 + ADICIONAR
               </button>
             </div>
+            */}
 
             <ul id="listaIntegrantes">
               {integrantes.map((intg, index) => (

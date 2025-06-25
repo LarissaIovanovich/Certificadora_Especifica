@@ -142,6 +142,51 @@ module.exports = {
     }
   },
 
+  async refreshToken(req, res) {
+    try {
+      const user = req.user;
+
+      // Busca o usuário atualizado
+      const usuario = await Usuario.findByPk(user.id);
+      if (!usuario) {
+        return res.status(404).json({ error: 'Usuário não encontrado.' });
+      }
+
+      // Busca perfis se necessário
+      let perfilJogador = null;
+      if (usuario.papel === 'jogador') {
+        perfilJogador = await Jogador.findOne({ where: { usuario_id: usuario.id } });
+      }
+      let perfilOrganizador = null;
+      if (usuario.papel === 'organizador') {
+        perfilOrganizador = await usuario.getEquipe_criada();
+      }
+
+      // Gera novo token
+      const token = jwt.sign(
+        { id: usuario.id, papel: usuario.papel, nome_usuario: usuario.nome_usuario },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      return res.json({
+        message: "Token renovado com sucesso",
+        token,
+        usuario: {
+          id: usuario.id,
+          nome_usuario: usuario.nome_usuario,
+          email: usuario.email,
+          papel: usuario.papel,
+          ...(perfilJogador && { perfil_jogador: perfilJogador.toJSON() }),
+          ...(perfilOrganizador && { perfil_organizador: perfilOrganizador.toJSON() })
+        }
+      });
+    } catch (err) {
+      console.error("Erro ao renovar token:", err);
+      return res.status(500).json({ error: "Erro ao renovar token." });
+    }
+  },
+
   async list(req, res) {
     try {
       const usuarios = await Usuario.findAll();

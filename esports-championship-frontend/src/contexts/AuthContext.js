@@ -9,22 +9,35 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    function loadUserFromStorage() {
-    
-      const token = localStorage.getItem('authToken'); 
+    async function loadUserFromStorage() {
+      const token = localStorage.getItem('authToken');
 
       if (token) {
         try {
           const decodedUser = jwtDecode(token);
           if (decodedUser.exp * 1000 > Date.now()) {
-            setUser({ id: decodedUser.id, papel: decodedUser.papel, nome_usuario: decodedUser.nome_usuario });
+            try {
+              const response = await api.post('/users/refresh-token');
+              setUser(response.data.usuario);
+              if (response.data.token) {
+                localStorage.setItem('authToken', response.data.token);
+              }
+            } catch (err) {
+              // Token inválido ou usuário não existe mais
+              localStorage.removeItem('authToken');
+              setUser(null);
+            }
           } else {
-            localStorage.removeItem('authToken'); // Remove se expirou
+            localStorage.removeItem('authToken');
+            setUser(null);
           }
         } catch (error) {
           console.error("Token inválido no storage:", error);
-          localStorage.removeItem('authToken'); // Remove se for inválido
+          localStorage.removeItem('authToken');
+          setUser(null);
         }
+      } else {
+        setUser(null);
       }
       setLoading(false);
     }
@@ -49,14 +62,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-   
     localStorage.removeItem('authToken');
     setUser(null);
     window.location.href = '/login';
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated: !!user, user, login, logout, loading }}>
+    <AuthContext.Provider value={{ isAuthenticated: !!user, user, setUser, login, logout, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );

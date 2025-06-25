@@ -16,6 +16,11 @@ export default function AceitarConvitePage() {
     setError('');
     try {
       const res = await api.post(`/jogadores/accept-invite/${token}`);
+      setUser(prev => ({
+        ...prev,
+        perfil_jogador: res.data.perfil_jogador
+      }));
+
       setSuccessMsg(res.data.message);
       setStatus('success');
       setTimeout(() => {

@@ -103,11 +103,7 @@ export default function CadastroEquipePage() {
       const equipeData = {
         nome: nomeEquipe,
         tag: tag,
-        url_logo: imagemPreview, 
-        jogadores: integrantes.map(intg => ({
-          apelido: intg.nickname,
-          posicao: intg.posicao,
-        }))
+        url_logo: imagemPreview, // todo - caso não tenha imagem, usar uma imagem padrão corretamente
       };
     
       const response = await api.post('/equipes', equipeData);

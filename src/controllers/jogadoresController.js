@@ -109,7 +109,7 @@ module.exports = {
       }
 
       const usuarioId = req.user.id;
-      const jogador = await Jogador.findOne({ where: { usuario_id: usuarioId } });
+      let jogador = await Jogador.findOne({ where: { usuario_id: usuarioId } });
       if (!jogador) {
         return res.status(404).json({ error: 'Perfil de jogador não encontrado.' });
       }
@@ -122,7 +122,14 @@ module.exports = {
       convite.status = 'aceito';
       await convite.save();
 
-      return res.json({ message: 'Convite aceito com sucesso!', equipe_id: convite.equipe_id });
+      // busca o perfil_jogador atualizado
+      jogador = await Jogador.findOne({ where: { usuario_id: usuarioId } });
+
+      return res.json({
+        message: 'Convite aceito com sucesso!',
+        equipe_id: convite.equipe_id,
+        perfil_jogador: jogador.toJSON()
+      });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ error: 'Erro ao aceitar convite.' });

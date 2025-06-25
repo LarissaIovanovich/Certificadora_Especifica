@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
 
 export default function MinhaEquipePage() {
-  const { user, loading } = useAuth();
+  const { user, setUser, loading } = useAuth();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
@@ -48,7 +48,7 @@ export default function MinhaEquipePage() {
 
     try {
       const response = await api.put('/users', { papel: selectedRole });
-      user.papel = response.data.usuario.papel;
+      setUser({ ...user, papel: 'jogador' });
 
       if (response.status !== 200) {
         alert('Erro ao atualizar papel do usuário.');

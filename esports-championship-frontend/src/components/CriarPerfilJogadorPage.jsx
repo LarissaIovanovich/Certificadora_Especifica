@@ -12,7 +12,7 @@ export default function CriarPerfilJogadorPage() {
   const [posicao, setPosicao] = useState('Flex'); // Valor padrão
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
 
   const navigate = useNavigate();
 
@@ -30,8 +30,7 @@ export default function CriarPerfilJogadorPage() {
 
     try {
       const player = await api.post('/jogadores', profileData);
-      user.perfil_jogador = player.data.jogador;
-      user.papel = 'jogador';
+      setUser({ ...user, perfil_jogador: player.data.jogador, papel: 'jogador' });
 
       setMessage('Perfil de jogador criado com sucesso! Redirecionando...');
       setTimeout(() => {

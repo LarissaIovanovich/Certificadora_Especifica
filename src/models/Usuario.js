@@ -24,7 +24,7 @@ const Usuario = sequelize.define('Usuario', { // 1. Nome do Model padronizado
     type: DataTypes.STRING, // O tamanho pode variar, então não vou especificar 
     allowNull: false
   },
-  papel: { 
+  papel: {
     type: DataTypes.STRING(50),
     allowNull: false,
     defaultValue: 'usuario' // 2. Valor padrão para novos usuários
@@ -44,11 +44,11 @@ Usuario.associate = (models) => {
     as: 'perfil_jogador'
   });
 
-// Um Usuário pode criar UMA Equipe (1-para-1)
-Usuario.hasOne(models.Equipe, {
-  foreignKey: 'criado_por',
-  as: 'equipe_criada' // singular
-});
+  // Um Usuário pode criar UMA Equipe (1-para-1)
+  Usuario.hasOne(models.Equipe, {
+    foreignKey: 'criado_por',
+    as: 'equipe_criada' // singular
+  });
 
   // Um Usuário pode criar vários Torneios (1-para-Muitos)
   Usuario.hasMany(models.Torneio, {

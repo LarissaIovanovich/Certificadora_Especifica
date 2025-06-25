@@ -17,7 +17,7 @@ import CriarPerfilJogadorPage from './components/CriarPerfilJogadorPage';
 import MinhaEquipePage from './components/MinhaEquipePage';
 import AdminTorneioDetalhesPage from './components/AdminTorneioDetalhesPage';
 import AdminListaTorneios from './components/AdminListaTorneios';
-
+import AceitarConvitePage from './components/AceitarConvitePage';
 
 function App() {
   return (
@@ -39,21 +39,21 @@ function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/criar-torneio" element={<CriarCampeonato />} />
           <Route
-          path="/admin/torneio/:id" 
-          element={
+            path="/admin/torneio/:id"
+            element={
               <ProtectedRoute>
-                  <AdminTorneioDetalhesPage />
+                <AdminTorneioDetalhesPage />
               </ProtectedRoute>
-          }
+            }
           />
           <Route
-    path="/admin/torneios"
-    element={
-        <ProtectedRoute>
-            <AdminListaTorneios />
-        </ProtectedRoute>
-    }
-/>
+            path="/admin/torneios"
+            element={
+              <ProtectedRoute>
+                <AdminListaTorneios />
+              </ProtectedRoute>
+            }
+          />
 
           {/* --- Rotas Protegidas (só para usuários logados) --- */}
           <Route
@@ -72,8 +72,7 @@ function App() {
             path="/inscricao"
             element={<ProtectedRoute><InscricaoPage /></ProtectedRoute>}
           />
-          
-          
+          <Route path="/invite/:token" element={<ProtectedRoute><AceitarConvitePage /></ProtectedRoute>} />
 
           {/* --- Rota de Redirecionamento para o Login --- */}
         </Routes>

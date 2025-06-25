@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
+const TorneioEquipe = require('./TorneioEquipe');
 
 const Equipe = sequelize.define('Equipe', {
   id: {
@@ -30,9 +31,9 @@ const Equipe = sequelize.define('Equipe', {
   }
 }, {
   tableName: 'equipes',
-  timestamps: true,
-  createdAt: 'criado_em',
-  updatedAt: false
+  timestamps: false,
+  //createdAt: 'criado_em',
+  //updatedAt: false
 });
 
 // --- ASSOCIAÇÃO COMPLETA ---
@@ -45,7 +46,7 @@ Equipe.associate = (models) => {
 
   // Relação Muitos-para-Muitos: Uma Equipe pode estar em muitos Torneios
   Equipe.belongsToMany(models.Torneio, {
-    through: 'torneio_equipes',
+    through: TorneioEquipe,
     foreignKey: 'equipe_id',
     as: 'torneios'
   });

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api'; 
+import api from '../services/api';
+import { useAuth } from "../contexts/AuthContext";
 import FuriaNav from '../components/FuriaNav';
-import styles from './CriarPerfilJogadorPage.module.css'; 
+import styles from './CriarPerfilJogadorPage.module.css';
 
 export default function CriarPerfilJogadorPage() {
   const [apelido, setApelido] = useState('');
@@ -11,6 +12,7 @@ export default function CriarPerfilJogadorPage() {
   const [posicao, setPosicao] = useState('Flex'); // Valor padrão
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const { user, setUser } = useAuth();
 
   const navigate = useNavigate();
 
@@ -21,13 +23,14 @@ export default function CriarPerfilJogadorPage() {
 
     const profileData = {
       apelido,
-      riot_id: riotId, 
+      riot_id: riotId,
       tag_line: tagLine,
       posicao,
     };
 
     try {
-      await api.post('/jogadores', profileData);
+      const player = await api.post('/jogadores', profileData);
+      setUser({ ...user, perfil_jogador: player.data.jogador, papel: 'jogador' });
 
       setMessage('Perfil de jogador criado com sucesso! Redirecionando...');
       setTimeout(() => {
@@ -39,7 +42,6 @@ export default function CriarPerfilJogadorPage() {
       setError(errorMessage);
     }
   };
-
 
   return (
     <>

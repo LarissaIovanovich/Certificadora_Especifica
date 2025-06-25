@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./LoginPage.css"; 
 import imgArte from '../assets/IMG.jpg';
 import { useNavigate } from 'react-router-dom'; 
+import { useAuth } from "../contexts/AuthContext";
 import api from '../services/api'; 
 import FuriaNav from "./FuriaNav";
 
@@ -14,9 +15,9 @@ export default function CadastroEquipePage() {
   const [nomeEquipe, setNomeEquipe] = useState('');
   const [tag, setTag] = useState('');
   const [imagemEquipe, setImagemEquipe] = useState(null);
-  const [imagemPreview, setImagemPreview] = useState('');
+  const [imagemPreview, setImagemPreview] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf9IlIoDAoMWCaofQ6rp1WgGBgBALXhNk-3w&s');
   const navigate = useNavigate(); 
-
+  const { user } = useAuth();
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -92,23 +93,21 @@ export default function CadastroEquipePage() {
         alert("O nome e a tag da equipe são obrigatórios.");
         return;
     }
-    if (integrantes.length < 5) {
-        alert("A equipe deve ter pelo menos 5 jogadores.");
-        return;
-    }
+
+    // if (integrantes.length < 5) {
+    //     alert("A equipe deve ter pelo menos 5 jogadores.");
+    //     return;
+    // }
 
     try {
       const equipeData = {
         nome: nomeEquipe,
         tag: tag,
-        url_logo: imagemPreview, 
-        jogadores: integrantes.map(intg => ({
-          apelido: intg.nickname,
-          posicao: intg.posicao,
-        }))
+        url_logo: imagemPreview, // todo - caso não tenha imagem, usar uma imagem padrão corretamente
       };
     
-      await api.post('/equipes', equipeData);
+      const response = await api.post('/equipes', equipeData);
+      user.perfil_organizador = response.data;
 
       alert("Equipe e jogadores cadastrados com sucesso!");
       setTimeout(() => {
@@ -150,10 +149,8 @@ export default function CadastroEquipePage() {
               onChange={(e) => setTag(e.target.value)}
               maxLength="10"
               required
-            />
-            {/* corrigir base 64 erro de requst muito grande*/}
-            {/* 
-              <label>IMAGEM DA EQUIPE</label>
+            />            
+            <label>IMAGEM DA EQUIPE</label>
             <div className="upload-box" style={{display: 'flex' ,flexDirection: 'column'}}>
               <img id="previewImagem" src={imagemPreview} alt="Upload imagem equipe"  style={{width: 250, height: 250}}/>
               <input type="file" id="uploadImagem" onChange={handleImagemChange} accept="image/*"/>
@@ -164,7 +161,8 @@ export default function CadastroEquipePage() {
                 <button type="button" className="remover" onClick={handleRemoverImagem}>REMOVER</button>
               </div>
             )}
-            */}
+
+            {/* Por ora são adicionados apenas via link de convite
 
             <label>INTEGRANTES</label>
             <div className="integrante-inputs">
@@ -194,6 +192,7 @@ export default function CadastroEquipePage() {
                 + ADICIONAR
               </button>
             </div>
+            */}
 
             <ul id="listaIntegrantes">
               {integrantes.map((intg, index) => (

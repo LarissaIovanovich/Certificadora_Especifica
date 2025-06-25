@@ -28,6 +28,7 @@ export default function FuriaNav() {
           </NavLink>
         )}
 
+        {/* TODO - exibir apenas caso usuário não contenha equipe cadastrada (user.perfil_organizador) */}
         {isAuthenticated && (
           <NavLink to="/criar-equipe" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>
             Criar Equipe

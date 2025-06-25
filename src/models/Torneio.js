@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db.js');
+const TorneioEquipe = require('./TorneioEquipe');
 
 const Torneio = sequelize.define('Torneio', {
   id: {
@@ -57,11 +58,7 @@ const Torneio = sequelize.define('Torneio', {
 Torneio.associate = (models) => {
   // Relação Muitos-para-Muitos: Um torneio tem muitas equipes participantes
   Torneio.belongsToMany(models.Equipe, {
-    // A propriedade 'through' agora é um objeto para podermos passar mais opções
-    through: {
-      model: 'torneio_equipes',
-      timestamps: false
-    },
+    through: TorneioEquipe,
     foreignKey: 'torneio_id',
     as: 'equipes'
   });

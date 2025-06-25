@@ -1,8 +1,6 @@
-const { Usuario, Jogador } = require('../models'); 
+const { Usuario, Jogador, Equipe } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
-
 const helpers = require('../utils/helpers');
 
 module.exports = {
@@ -61,70 +59,134 @@ module.exports = {
 
   // --- MÉTODO DE LOGIN (JÁ ESTAVA ÓTIMO, APENAS POLIMENTO) ---
   async login(req, res) {
-  try {
-    console.log('\n--- NOVA TENTATIVA DE LOGIN ---'); // Separador para clareza
-    
-    // 1. O que o servidor está recebendo?
-    console.log('Dados recebidos no corpo da requisição:', req.body);
-    
-    const { email, senha } = req.body;
+    try {
+      console.log('\n--- NOVA TENTATIVA DE LOGIN ---'); // Separador para clareza
 
-    if (!email || !senha) {
-      console.log('Erro: Email ou senha ausentes.');
-      return res.status(400).json({ error: "E-mail e senha são obrigatórios." });
-    }
+      // 1. O que o servidor está recebendo?
+      console.log('Dados recebidos no corpo da requisição:', req.body);
 
-    // 2. Estamos buscando o usuário corretamente?
-    console.log('Buscando usuário com o email:', email);
-    const usuario = await Usuario.findOne({ where: { email } });
+      const { email, senha } = req.body;
 
-    // 3. O usuário foi encontrado? E qual é o hash dele?
-    if (!usuario) {
-      console.log('Resultado da busca: Usuário NÃO encontrado.');
-      return res.status(401).json({ error: 'Credenciais inválidas' });
-    }
-    
-    console.log('Resultado da busca: Usuário encontrado.');
-    // Usamos toJSON() para ver os dados puros do banco
-    console.log('Dados do usuário:', usuario.toJSON()); 
-    console.log('Hash da senha do banco:', usuario.senha_hash);
-
-    // 4. A comparação da senha está funcionando?
-    console.log('Comparando a senha fornecida com o hash do banco...');
-    const isPasswordValid = await bcrypt.compare(senha, usuario.senha_hash);
-    console.log('O resultado da comparação (isPasswordValid) é:', isPasswordValid); // ESTE É O PONTO CHAVE
-
-    if (!isPasswordValid) {
-      console.log('Conclusão: Senha inválida.');
-      return res.status(401).json({ error: 'Credenciais inválidas' });
-    }
-    
-    console.log('Conclusão: Senha VÁLIDA. Gerando token...');
-
-    // Gera o token JWT (sem alterações)
-    const token = jwt.sign(
-      { id: usuario.id, papel: usuario.papel, nome_usuario: usuario.nome_usuario },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    return res.json({
-      message: "Autenticado com sucesso",
-      token,
-      usuario: {
-        id: usuario.id,
-        nome_usuario: usuario.nome_usuario,
-        email: usuario.email,
-        papel: usuario.papel
+      if (!email || !senha) {
+        console.log('Erro: Email ou senha ausentes.');
+        return res.status(400).json({ error: "E-mail e senha são obrigatórios." });
       }
-    });
 
-  } catch (err) {
-    console.error("ERRO CRÍTICO NO LOGIN:", err)
-    return res.status(500).json({ error: "Ocorreu um erro interno no servidor." });
-  }
-},
- 
+      // 2. Estamos buscando o usuário corretamente?
+      console.log('Buscando usuário com o email:', email);
+      const usuario = await Usuario.findOne({ where: { email } });
+
+      // 3. O usuário foi encontrado? E qual é o hash dele?
+      if (!usuario) {
+        console.log('Resultado da busca: Usuário NÃO encontrado.');
+        return res.status(401).json({ error: 'Credenciais inválidas' });
+      }
+
+      console.log('Resultado da busca: Usuário encontrado.');
+      // Usamos toJSON() para ver os dados puros do banco
+      console.log('Dados do usuário:', usuario.toJSON());
+      console.log('Hash da senha do banco:', usuario.senha_hash);
+
+      // 4. A comparação da senha está funcionando?
+      console.log('Comparando a senha fornecida com o hash do banco...');
+      const isPasswordValid = await bcrypt.compare(senha, usuario.senha_hash);
+      console.log('O resultado da comparação (isPasswordValid) é:', isPasswordValid); // ESTE É O PONTO CHAVE
+
+      if (!isPasswordValid) {
+        console.log('Conclusão: Senha inválida.');
+        return res.status(401).json({ error: 'Credenciais inválidas' });
+      }
+
+      console.log('Conclusão: Senha VÁLIDA. Gerando token...');
+
+      // Busca o perfil do jogador (caso necessário)
+      let perfilJogador = null;
+      if (usuario.dataValues.papel === 'jogador') {
+        perfilJogador = await Jogador.findOne({ where: { usuario_id: usuario.id } });
+
+        // Anexa perfilJogador ao usuário
+        if (perfilJogador) usuario.perfil_jogador = perfilJogador;
+      }
+
+      let perfilOrganizador = null;
+      if (usuario.dataValues.papel === 'organizador') {
+        // busca a equipe criada por este usuário (1 para 1)
+        perfilOrganizador = await usuario.getEquipe_criada();
+
+        // Anexa perfilOrganizador ao usuário
+        if (perfilOrganizador) usuario.perfil_organizador = perfilOrganizador;
+      }
+
+      // Gera o token JWT (sem alterações)
+      const token = jwt.sign(
+        { id: usuario.id, papel: usuario.papel, nome_usuario: usuario.nome_usuario },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      return res.json({
+        message: "Autenticado com sucesso",
+        token,
+        usuario: {
+          id: usuario.id,
+          nome_usuario: usuario.nome_usuario,
+          email: usuario.email,
+          papel: usuario.papel,
+          ...(perfilJogador && { perfil_jogador: perfilJogador.toJSON() }),
+          ...(perfilOrganizador && { perfil_organizador: perfilOrganizador.toJSON() })
+        }
+      });
+    } catch (err) {
+      console.error("ERRO CRÍTICO NO LOGIN:", err)
+      return res.status(500).json({ error: "Ocorreu um erro interno no servidor." });
+    }
+  },
+
+  async refreshToken(req, res) {
+    try {
+      const user = req.user;
+
+      // Busca o usuário atualizado
+      const usuario = await Usuario.findByPk(user.id);
+      if (!usuario) {
+        return res.status(404).json({ error: 'Usuário não encontrado.' });
+      }
+
+      // Busca perfis se necessário
+      let perfilJogador = null;
+      if (usuario.papel === 'jogador') {
+        perfilJogador = await Jogador.findOne({ where: { usuario_id: usuario.id } });
+      }
+      let perfilOrganizador = null;
+      if (usuario.papel === 'organizador') {
+        perfilOrganizador = await usuario.getEquipe_criada();
+      }
+
+      // Gera novo token
+      const token = jwt.sign(
+        { id: usuario.id, papel: usuario.papel, nome_usuario: usuario.nome_usuario },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      return res.json({
+        message: "Token renovado com sucesso",
+        token,
+        usuario: {
+          id: usuario.id,
+          nome_usuario: usuario.nome_usuario,
+          email: usuario.email,
+          papel: usuario.papel,
+          ...(perfilJogador && { perfil_jogador: perfilJogador.toJSON() }),
+          ...(perfilOrganizador && { perfil_organizador: perfilOrganizador.toJSON() })
+        }
+      });
+    } catch (err) {
+      console.error("Erro ao renovar token:", err);
+      return res.status(500).json({ error: "Erro ao renovar token." });
+    }
+  },
+
   async list(req, res) {
     try {
       const usuarios = await Usuario.findAll();
@@ -143,7 +205,8 @@ module.exports = {
       res.status(500).json({ error: err.message });
     }
   },
-   async createProfile(req, res) {
+
+  async createProfile(req, res) {
     try {
       // 1. Pegar os dados do corpo da requisição
       const { apelido, riot_id, tag_line, posicao } = req.body;
@@ -173,6 +236,63 @@ module.exports = {
     } catch (err) {
       console.error("Erro ao criar perfil de jogador:", err);
       return res.status(500).json({ error: "Ocorreu um erro interno no servidor." });
+    }
+  },
+
+  async edit(req, res) {
+    try {
+      const usuarioId = req.user.id;
+      const { nome_usuario, email, senha, papel } = req.body;
+      const usuario = await Usuario.findByPk(usuarioId);
+
+      if (!usuario) {
+        return res.status(404).json({ error: 'Usuário não encontrado.' });
+      }
+
+      if (nome_usuario && nome_usuario != usuario.nome_usuario) {
+        // valida nome_usuario
+        const isNicknameTaken = await Usuario.findOne({ where: { nome_usuario } });
+
+        if (isNicknameTaken) {
+          return res.status(400).json({ error: "Este nome_usuario já está em uso." });
+        }
+
+        usuario.nome_usuario = nome_usuario;
+      }
+
+      if (email) {
+        // valida e-mail
+        if (!helpers.validateEmail(email)) {
+          return res.status(400).json({ error: 'Formato de e-mail inválido' });
+        }
+
+        usuario.email = email;
+      }
+
+      if (senha) {
+        // valida senha
+        if (senha.length < 8) {
+          return res.status(400).json({ error: 'A senha deve ter no mínimo 8 caracteres' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        usuario.senha_hash = await bcrypt.hash(senha, salt);
+      }
+
+      if (papel && (!usuario.papel || usuario.papel === 'usuario') && (papel === 'jogador' || papel === 'organizador')) {
+        // permite SOMENTE caso usuário não tenha papel definido (ou seja papel 'usuario') e mudança seja para 'jogador' ou 'organizador'
+        usuario.papel = papel;
+      }
+
+      await usuario.save();
+
+      // não retorna o hash da senha
+      delete usuario.dataValues.senha_hash;
+
+      return res.json({ message: 'Usuário atualizado com sucesso.', usuario });
+    } catch (err) {
+      console.error("Erro ao editar usuário:", err);
+      return res.status(500).json({ error: 'Erro ao editar usuário.' });
     }
   },
 };

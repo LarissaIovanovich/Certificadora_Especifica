@@ -1,4 +1,4 @@
-const { Partida, ResultadoPartida, Jogador, Equipe, sequelize } = require('../models');
+const { Partida, ResultadoPartida, Jogador, Equipe, Torneio, sequelize } = require('../models');
 const { Op } = require('sequelize');
 
 module.exports = {
@@ -16,21 +16,29 @@ module.exports = {
       const { equipe_id, torneio_id } = req.query;
 
       let where = {};
+      let include = [];
+
       if (equipe_id) {
         // Retorna partidas onde a equipe é 'A' OU 'B'
-        where = {
-          [Op.or]: [
-            { equipe_a_id: equipe_id },
-            { equipe_b_id: equipe_id }
-          ]
-        };
+        where[Op.or] = [
+          { equipe_a_id: equipe_id },
+          { equipe_b_id: equipe_id }
+        ];
+        // Inclui dados das duas equipes
+        include.push(
+          { model: Equipe, as: 'equipeA', attributes: ['id', 'nome', 'tag', 'url_logo'] },
+          { model: Equipe, as: 'equipeB', attributes: ['id', 'nome', 'tag', 'url_logo'] }
+        );
       }
 
       if (torneio_id) {
         where.torneio_id = torneio_id;
+        include.push(
+          { model: Torneio, as: 'torneio', attributes: ['id', 'nome', 'data_inicio', 'data_fim', 'status'] }
+        );
       }
 
-      const partidas = await Partida.findAll({ where });
+      const partidas = await Partida.findAll({ where, include });
       return res.json(partidas);
     } catch (err) {
       return res.status(500).json({ error: err.message });

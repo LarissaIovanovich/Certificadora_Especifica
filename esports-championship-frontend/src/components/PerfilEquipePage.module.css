@@ -115,6 +115,7 @@
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .inviteButton:disabled {
   background: #bfae5a;
   cursor: not-allowed;
@@ -170,6 +171,74 @@
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .removeInviteButton:hover {
   background: #c53030;
+}
+
+.partidasSection {
+  margin-top: 2.5rem;
+  background: #232323;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.partidasList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.partidaItem {
+  background: #232323;
+  border-radius: 8px;
+  margin-bottom: 1.2rem;
+  padding: 1.2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.partidaEquipes {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.partidaEquipe {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.partidaLogo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  object-fit: contain;
+  border: 2px solid #facc15;
+}
+
+.partidaNome {
+  font-weight: bold;
+  color: #fff;
+}
+
+.partidaTag {
+  color: #facc15;
+  font-size: 0.9em;
+}
+
+.partidaVs {
+  color: #facc15;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  margin: 0 0.7rem;
+}
+
+.partidaStatus {
+  color: #facc15;
+  font-size: 1.1rem;
 }

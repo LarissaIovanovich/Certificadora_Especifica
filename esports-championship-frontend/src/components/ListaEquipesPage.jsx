@@ -39,7 +39,10 @@ export default function ListaEquipesPage() {
       <div className={styles.pageContainer}>
         <h1 className={styles.pageTitle}>Equipes Cadastradas</h1>
         
-        <div className={styles.equipesGrid} style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', overflow: 'auto'}}>
+        <div className={styles.equipesGrid} style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', 
+         maxHeight: '500px', 
+         overflowY: 'auto',  
+          }}>
           {equipes.length > 0 ? (
             equipes.map(equipe => (
               <Link to={`/equipe/${equipe.id}`} key={equipe.id} className={styles.equipeCard} style={{width: 180}}>

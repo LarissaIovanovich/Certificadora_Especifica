@@ -28,19 +28,18 @@ export default function FuriaNav() {
           </NavLink>
         )}
 
-        {/* TODO - exibir apenas caso usuário não contenha equipe cadastrada (user.perfil_organizador) */}
-        {isAuthenticated && (
-          <NavLink to="/criar-equipe" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>
-            Criar Equipe
-          </NavLink>
-        )}
-
         {/* --- LINK CONDICIONAL PARA ADMIN --- */}
         {/* Este link só aparece se o usuário estiver logado E tiver o papel de 'admin' */}
         {isAuthenticated && user?.papel === 'admin' && (
           <NavLink to="/admin/torneios" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>
             Painel Admin
           </NavLink>
+        )}
+        
+          {isAuthenticated && user?.papel === 'organizador' && (
+           <NavLink to="/criar-equipe" className={({ isActive }) => isActive ? styles.activeLink : styles.navLink}>
+           Criar Equipe
+         </NavLink>
         )}
       </div>
 

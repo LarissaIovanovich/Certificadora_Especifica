@@ -8,6 +8,8 @@ import LoginPage from './components/LoginPage';
 import SignUpPage from './components/SignUpPage';
 import PartidasPage from './components/PartidasPage';
 import PlacarPage from './components/Placar';
+import AdminPage from './components/AdminPage';
+import CriarCampeonato from './components/CriarCampeonato';
 import ChaveamentoPage from './components/ChaveamentoPage';
 import PerfilEquipePage from './components/PerfilEquipePage';
 import ListaEquipesPage from './components/ListaEquipesPage';
@@ -34,6 +36,8 @@ function App() {
           <Route path="/chaveamento" element={<ChaveamentoPage />} />
           <Route path="/partidas" element={<PartidasPage />} />
           <Route path="/placar" element={<PlacarPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/criar-torneio" element={<CriarCampeonato />} />
           <Route
           path="/admin/torneio/:id" 
           element={

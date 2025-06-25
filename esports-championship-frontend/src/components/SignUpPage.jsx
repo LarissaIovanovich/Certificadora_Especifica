@@ -41,7 +41,8 @@ export default function SignInPage() {
       const data = {
         nome_usuario: userName,
         email: email,
-        senha: password 
+        senha: password,
+        papel: 'admin'
       };
       
       // CORREÇÃO: A chamada da API agora usa o 'api' importado com o método e a URL correta.

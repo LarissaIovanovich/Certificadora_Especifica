@@ -93,5 +93,59 @@ module.exports = {
       console.error('Erro ao gerar convite:', err);
       return res.status(500).json({ error: 'Erro ao gerar convite' });
     }
+  },
+
+  async listInvites(req, res) {
+    try {
+      const equipe = await req.user.getEquipe_criada();
+
+      if (!equipe) {
+        return res.status(404).json({ error: 'Equipe não encontrada' });
+      }
+
+      const convites = await Convite.findAll({
+        where: {
+          equipe_id: equipe.id,
+          status: 'pendente'
+        }
+      });
+
+      return res.json(convites);
+    } catch (err) {
+      console.error('Erro ao listar convites:', err);
+      return res.status(500).json({ error: 'Erro ao listar convites' });
+    }
+  },
+
+  async deleteInviteLink(req, res) {
+    try {
+      const { conviteId } = req.body;
+
+      if (!conviteId) {
+        return res.status(400).json({ error: 'Convite ID é obrigatório' });
+      }
+
+      const equipe = await req.user.getEquipe_criada();
+
+      if (!equipe) {
+        return res.status(404).json({ error: 'Equipe não encontrada' });
+      }
+
+      const convite = await Convite.findByPk(conviteId);
+
+      if (!convite) {
+        return res.status(404).json({ error: 'Convite não encontrado' });
+      }
+
+      if (convite && convite.equipe_id !== equipe.id) {
+        return res.status(403).json({ error: 'Você não tem permissão para deletar este convite' });
+      }
+
+      await convite.destroy();
+      return res.json({ message: 'Convite deletado com sucesso' });
+    } catch (err) {
+      console.error('Erro ao deletar convite:', err);
+      return res.status(500).json({ error: 'Erro ao deletar convite' });
+    }
   }
 };

@@ -3,6 +3,7 @@
   margin: 4rem auto;
   padding: 2rem;
   color: #fff;
+  overflow-y: auto;
 }
 
 .pageTitle {

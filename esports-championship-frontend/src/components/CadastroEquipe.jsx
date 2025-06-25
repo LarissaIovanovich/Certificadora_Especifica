@@ -161,7 +161,6 @@ export default function CadastroEquipePage() {
                 <button type="button" className="remover" onClick={handleRemoverImagem}>REMOVER</button>
               </div>
             )}
-
             {/* Por ora são adicionados apenas via link de convite
 
             <label>INTEGRANTES</label>

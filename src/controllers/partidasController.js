@@ -1,8 +1,7 @@
-// 1. IMPORTAÇÃO CORRIGIDA E COMPLETA
 const { Partida, ResultadoPartida, Jogador, Equipe, sequelize } = require('../models');
+const { Op } = require('sequelize');
 
 module.exports = {
-  // --- SUAS FUNÇÕES EXISTENTES (SEM ALTERAÇÃO) ---
   async create(req, res) {
     try {
       const partida = await Partida.create(req.body);
@@ -11,14 +10,33 @@ module.exports = {
       res.status(400).json({ error: err.message });
     }
   },
+
   async list(req, res) {
     try {
-      const partidas = await Partida.findAll();
-      res.json(partidas);
+      const { equipe_id, torneio_id } = req.query;
+
+      let where = {};
+      if (equipe_id) {
+        // Retorna partidas onde a equipe é 'A' OU 'B'
+        where = {
+          [Op.or]: [
+            { equipe_a_id: equipe_id },
+            { equipe_b_id: equipe_id }
+          ]
+        };
+      }
+
+      if (torneio_id) {
+        where.torneio_id = torneio_id;
+      }
+
+      const partidas = await Partida.findAll({ where });
+      return res.json(partidas);
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      return res.status(500).json({ error: err.message });
     }
   },
+
   async getById(req, res) {
     try {
       const partida = await Partida.findByPk(req.params.id);
@@ -28,8 +46,6 @@ module.exports = {
       res.status(500).json({ error: err.message });
     }
   },
-
-  // --- 2. ADIÇÃO DAS NOVAS FUNÇÕES ---
 
   // Função para um admin registrar o resultado de uma partida
   async registrarResultado(req, res) {
@@ -53,7 +69,7 @@ module.exports = {
       await partida.save({ transaction: t });
 
       await ResultadoPartida.destroy({ where: { partida_id: id }, transaction: t });
-      
+
       const resultadosParaCriar = resultados_jogadores.map(resultado => ({
         ...resultado,
         partida_id: id
@@ -79,7 +95,7 @@ module.exports = {
         include: [
           { model: Equipe, as: 'equipeA' },
           { model: Equipe, as: 'equipeB' },
-          { 
+          {
             model: ResultadoPartida,
             as: 'resultados',
             include: [{ model: Jogador, as: 'jogador' }]

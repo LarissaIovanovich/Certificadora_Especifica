@@ -45,6 +45,56 @@ module.exports = {
     }
   },
 
+  async getRelatorioPartida(req, res) {
+    try {
+      const { id } = req.params;
+
+      // busca resultados da partida e inclui os jogadores
+      const resultados = await ResultadoPartida.findAll({
+        where: { partida_id: id },
+        include: [{ model: Jogador, as: 'jogador', attributes: ['id', 'apelido', 'usuario_id'] }]
+      });
+
+      if (!resultados.length) {
+        return res.status(404).json({ error: 'Nenhum resultado encontrado para esta partida.' });
+      }
+
+      // Calcula totais e MVP
+      let totalAbates = 0, totalMortes = 0, totalAssistencias = 0;
+      let mvp = null, maiorAbates = -1;
+      const destaques = resultados.map(r => {
+        totalAbates += r.abates;
+        totalMortes += r.mortes;
+        totalAssistencias += r.assistencias;
+        if (r.mvp) mvp = r.jogador;
+        if (r.abates > maiorAbates) maiorAbates = r.abates;
+        return {
+          jogador: r.jogador,
+          abates: r.abates,
+          mortes: r.mortes,
+          assistencias: r.assistencias,
+          agente_usado: r.agente_usado,
+          mvp: r.mvp
+        };
+      });
+
+      // Jogadores com mais abates (caso não tenha MVP marcado)
+      const topFraggers = destaques.filter(d => d.abates === maiorAbates);
+
+      res.json({
+        partida_id: id,
+        totalAbates,
+        totalMortes,
+        totalAssistencias,
+        mvp: mvp || (topFraggers.length === 1 ? topFraggers[0].jogador : null),
+        destaques,
+        topFraggers: topFraggers.map(d => d.jogador)
+      });
+    } catch (err) {
+      res.status(500).json({ error: 'Erro ao gerar relatório da partida.' });
+    }
+  },
+
   async getById(req, res) {
     try {
       const partida = await Partida.findByPk(req.params.id);

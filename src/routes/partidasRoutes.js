@@ -6,6 +6,7 @@ const { authMiddleware, requireRole } = require('../middlewares/authMiddleware')
 // --- ROTAS PÚBLICAS ---
 // Qualquer pessoa pode ver a lista de partidas e os detalhes de uma partida específica.
 router.get('/', partidasController.list);
+router.get('/:id/relatorio', partidasController.getRelatorioPartida);
 router.get('/:id', partidasController.getById);
 
 // Rota para o público ver o placar/resultado final de uma partida.

@@ -108,6 +108,12 @@ module.exports = {
         return res.status(400).json({ error: 'Convite inválido ou já utilizado.' });
       }
 
+      // Valida se equipe já tem 5 jogadores
+      const jogadoresCount = await Jogador.count({ where: { equipe_id: convite.equipe_id } });
+      if (jogadoresCount >= 5) {
+        return res.status(400).json({ error: 'Equipe já possui 5 jogadores.' });
+      }
+
       const usuarioId = req.user.id;
       let jogador = await Jogador.findOne({ where: { usuario_id: usuarioId } });
       if (!jogador) {

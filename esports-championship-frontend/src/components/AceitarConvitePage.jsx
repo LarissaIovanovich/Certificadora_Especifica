@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import FuriaNav from './FuriaNav';
 import styles from './AceitarConvitePage.module.css';
+import { useAuth } from "../contexts/AuthContext";
 
 export default function AceitarConvitePage() {
   const { token } = useParams();
@@ -10,6 +11,7 @@ export default function AceitarConvitePage() {
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const { user, setUser } = useAuth();
 
   const handleAccept = async () => {
     setStatus('loading');

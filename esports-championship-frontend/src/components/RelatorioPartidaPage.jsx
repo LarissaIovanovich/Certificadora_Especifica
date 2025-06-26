@@ -99,6 +99,7 @@ export default function RelatorioPartidaPage() {
   const totalStats = getTotalStats(relatorio);
 
   return (
+    <>
     <div className={styles.container}>
       <h1 className={styles.title}>
         Relatório da Partida: {relatorio.equipeA?.nome || 'Time A'} vs {relatorio.equipeB?.nome || 'Time B'}
@@ -117,9 +118,11 @@ export default function RelatorioPartidaPage() {
           <p>Assistências: {totalStats.assistencias}</p>
         </div>
       </section>
-
-      {renderTeamTable(relatorio.equipeA)}
-      {renderTeamTable(relatorio.equipeB)}
     </div>
+    <div style={{display: 'flex', flexDirection: 'row', width: '50rem', gap: '20px'}}>
+    {renderTeamTable(relatorio.equipeA)}
+    {renderTeamTable(relatorio.equipeB)}
+    </div>
+    </>
   );
 }

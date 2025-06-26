@@ -12,7 +12,7 @@ module.exports = {
     }
   },
 
- 
+  
   async list(req, res) {
     try {
       const { equipe_id, torneio_id } = req.query;
@@ -50,18 +50,18 @@ module.exports = {
     try {
       const { id } = req.params;
 
-     
+  
       const partida = await Partida.findByPk(id, {
         include: [
-    
           { model: Equipe, as: 'equipeA' },
-          
           { model: Equipe, as: 'equipeB' },
-          
           {
             model: ResultadoPartida,
             as: 'resultados',
-            include: [{ model: Jogador, as: 'jogador' }]
+            include: [{
+              model: Jogador,
+              as: 'jogador'
+            }]
           }
         ]
       });
@@ -70,7 +70,6 @@ module.exports = {
         return res.status(404).json({ error: 'Nenhum dado encontrado para esta partida.' });
       }
 
- 
       const jogadoresEquipeA = partida.resultados
         .filter(r => r.jogador && r.jogador.equipe_id === partida.equipe_a_id)
         .map(r => ({
@@ -95,7 +94,7 @@ module.exports = {
           mvp: Boolean(r.mvp)
         }));
 
- 
+      
       const relatorioFinal = {
         partida_id: partida.id,
         mapa: partida.mapa,
@@ -138,7 +137,7 @@ module.exports = {
     }
   },
 
- 
+  
   async registrarResultado(req, res) {
     const t = await sequelize.transaction();
     try {
@@ -176,7 +175,7 @@ module.exports = {
     }
   },
 
- 
+  
   async getResultado(req, res) {
     try {
       const { id } = req.params;

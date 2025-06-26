@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import api from '../services/api'; 
-import styles from './RelatorioPartidaPage.module.css'; 
+import api from '../services/api'; // Seu arquivo de configuração do Axios
+import styles from './RelatorioPartidaPage.module.css'; // O CSS que já ajustamos
 
 export default function RelatorioPartidaPage() {
   const { id } = useParams();
@@ -13,7 +13,7 @@ export default function RelatorioPartidaPage() {
     async function fetchRelatorio() {
       try {
         setLoading(true);
-        setError(null); 
+        setError(null); // Limpa erros anteriores
         const response = await api.get(`/partidas/${id}/relatorio`);
         setRelatorio(response.data);
       } catch (err) {
@@ -27,7 +27,7 @@ export default function RelatorioPartidaPage() {
     fetchRelatorio();
   }, [id]);
 
-  
+  // --- Funções Auxiliares para extrair dados do NOVO JSON ---
   const getMvp = (data) => {
     if (!data) return null;
     const todosJogadores = [...(data.equipeA?.jogadores || []), ...(data.equipeB?.jogadores || [])];
@@ -45,7 +45,7 @@ export default function RelatorioPartidaPage() {
     }, { abates: 0, mortes: 0, assistencias: 0 });
   };
   
-
+  // Função para renderizar a tabela de uma equipe
   const renderTeamTable = (equipe) => {
     if (!equipe || !equipe.jogadores || equipe.jogadores.length === 0) {
       return <p>Dados dos jogadores não disponíveis.</p>;
@@ -56,7 +56,7 @@ export default function RelatorioPartidaPage() {
         <div className={styles.teamHeader}>
             <img src={equipe.url_logo} alt={`Logo ${equipe.nome}`} className={styles.teamLogo} />
             <h2 className={styles.sectionTitle}>{equipe.nome}</h2>
-   
+            {/* A INFORMAÇÃO DO PLACAR FOI REMOVIDA DAQUI */}
         </div>
         <div className={styles.tableWrapper}>
           <table className={styles.playersTable}>
@@ -82,7 +82,7 @@ export default function RelatorioPartidaPage() {
     );
   };
 
-  
+  // --- Lógica de Renderização Principal ---
   if (loading) {
     return <div className={styles.container}>Carregando Relatório...</div>;
   }

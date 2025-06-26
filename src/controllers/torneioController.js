@@ -19,7 +19,6 @@ module.exports = {
     }
   },
 
- 
   async list(req, res) {
     try {
       const torneios = await Torneio.findAll();
@@ -28,7 +27,6 @@ module.exports = {
       res.status(500).json({ error: err.message });
     }
   },
-
 
   async getById(req, res) {
     try {
@@ -44,9 +42,10 @@ module.exports = {
               as: 'jogadores'
             }]
           },
+        
           {
             model: Partida,
-            as: 'partidas' 
+            as: 'partidas'
           }
         ]
       });
@@ -61,7 +60,6 @@ module.exports = {
     }
   },
 
- 
   async gerarChaveamento(req, res) {
     try {
         const { id: torneio_id } = req.params;
@@ -103,6 +101,7 @@ module.exports = {
                 equipe_a_id: equipesParaChaveamento[i].id,
                 equipe_b_id: equipesParaChaveamento[i + 1].id,
                 status: 'Agendada',
+                agendada_para: new Date()
             });
         }
 
@@ -118,7 +117,6 @@ module.exports = {
         return res.status(500).json({ error: 'Ocorreu um erro interno ao gerar o chaveamento.' });
     }
   },
-
   
   async atualizarStatusInscricao(req, res) {
     try {
@@ -143,7 +141,6 @@ module.exports = {
     }
   },
 
- 
   async inscreverEquipe(req, res) {
     try {
         const { id: torneio_id } = req.params;

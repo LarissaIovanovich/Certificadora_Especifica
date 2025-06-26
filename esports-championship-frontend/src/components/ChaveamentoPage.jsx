@@ -5,7 +5,6 @@ import CampeonatoHeader from "./CampeonatoHeader";
 import FuriaNav from "./FuriaNav";
 import api from "../services/api";
 
-
 function generateBracket(teams) {
   if (!teams || teams.length === 0) return [];
   const rounds = [];
@@ -35,8 +34,6 @@ const renderTeamName = (team) => {
   return team?.nome || "A definir";
 };
 
-
-
 const findMatchForTeams = (teamA, teamB, allMatches) => {
   if (!teamA || !teamB || teamA.isPlaceholder || teamB.isPlaceholder || !allMatches) {
     return null;
@@ -48,6 +45,29 @@ const findMatchForTeams = (teamA, teamB, allMatches) => {
   );
 };
 
+const renderMatch = (match, key, partidasDoTorneio, styles) => {
+    const partidaReal = findMatchForTeams(match.teamA, match.teamB, partidasDoTorneio);
+    
+    const matchContent = (
+      <div className={styles.matchBox}>
+        <span className={styles.teamInline}>{renderTeamName(match.teamA)}</span>
+        <span className={styles.teamInline}>{renderTeamName(match.teamB)}</span>
+      </div>
+    );
+
+    if (partidaReal && partidaReal.id) {
+      return (
+        <Link 
+          to={`/partidas/${partidaReal.id}/relatorio`} 
+          key={key}
+          className={styles.matchLink}
+        >
+          {matchContent}
+        </Link>
+      );
+    }
+    return <div key={key}>{matchContent}</div>;
+};
 
 export default function ChaveamentoPage() {
   const { id } = useParams();
@@ -77,11 +97,11 @@ export default function ChaveamentoPage() {
     fetchTournamentData();
   }, [id]);
 
-  if (loading) return <div className={styles.title}>Carregando chaveamento...</div>;
+  if (loading) return <div className={styles.title}>A carregar chaveamento...</div>;
   if (!campeonato) return <div className={styles.title}>Torneio não encontrado ou erro ao carregar.</div>;
   
   const equipesDoTorneio = campeonato.equipes || [];
-  const partidasDoTorneio = campeonato.partidas || []; 
+  const partidasDoTorneio = campeonato.partidas || [];
   const totalTeams = 16;
   
   const filledTeams = [
@@ -97,35 +117,6 @@ export default function ChaveamentoPage() {
   const leftRounds = generateBracket(leftTeams);
   const rightRounds = generateBracket(rightTeams);
 
-
-  const renderMatch = (match, key) => {
-   
-    const partidaReal = findMatchForTeams(match.teamA, match.teamB, partidasDoTorneio);
-    
-    const matchContent = (
-      <div className={styles.matchBox}>
-        <span className={styles.teamInline}>{renderTeamName(match.teamA)}</span>
-        <span className={styles.teamInline}>{renderTeamName(match.teamB)}</span>
-      </div>
-    );
-
-   
-    if (partidaReal && partidaReal.id) {
-      return (
-        <Link 
-          to={`/partidas/${partidaReal.id}/relatorio`} 
-          key={key}
-          className={styles.matchLink}
-        >
-          {matchContent}
-        </Link>
-      );
-    }
-
-
-    return <div key={key}>{matchContent}</div>;
-  };
-
   return (
     <>
       <FuriaNav />
@@ -140,8 +131,7 @@ export default function ChaveamentoPage() {
                 {leftRounds.map((round, roundIdx) => (
                   <div className={styles.roundColumn} key={`left-round-${roundIdx}`}>
                     {round.map((match, matchIdx) => (
-                      
-                      renderMatch(match, `left-match-${roundIdx}-${matchIdx}`)
+                      renderMatch(match, `left-match-${roundIdx}-${matchIdx}`, partidasDoTorneio, styles)
                     ))}
                   </div>
                 ))}
@@ -157,8 +147,7 @@ export default function ChaveamentoPage() {
                 {[...rightRounds].reverse().map((round, roundIdx) => (
                   <div className={styles.roundColumn} key={`right-round-${roundIdx}`}>
                     {round.map((match, matchIdx) => (
-                    
-                       renderMatch(match, `right-match-${roundIdx}-${matchIdx}`)
+                       renderMatch(match, `right-match-${roundIdx}-${matchIdx}`, partidasDoTorneio, styles)
                     ))}
                   </div>
                 ))}

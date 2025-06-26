@@ -65,7 +65,6 @@ const Partida = sequelize.define('Partida', {
   timestamps: false
 });
 
-
 Partida.associate = (models) => {
 
   Partida.belongsTo(models.Torneio, {
@@ -73,23 +72,23 @@ Partida.associate = (models) => {
     as: 'torneio'
   });
 
-
+ 
   Partida.belongsTo(models.Equipe, {
     foreignKey: 'equipe_a_id',
-    as: 'equipeA' 
+    as: 'equipeA'
   });
 
   Partida.belongsTo(models.Equipe, {
     foreignKey: 'equipe_b_id',
-    as: 'equipeB' 
+    as: 'equipeB'
   });
 
   Partida.belongsTo(models.Equipe, {
     foreignKey: 'equipe_vencedora_id',
-    as: 'vencedor' 
+    as: 'vencedor'
   });
   
- 
+
   Partida.hasMany(models.ResultadoPartida, { 
     foreignKey: 'partida_id',
     as: 'resultados' 

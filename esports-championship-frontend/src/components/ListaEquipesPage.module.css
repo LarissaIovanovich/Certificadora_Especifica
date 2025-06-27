@@ -1,0 +1,69 @@
+.pageContainer {
+  max-width: 1400px;
+  margin: 4rem auto;
+  padding: 2rem;
+  color: #fff;
+  overflow-y: auto;
+}
+
+.pageTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  color: #facc15;
+  text-align: center;
+  margin-bottom: 3rem;
+  letter-spacing: 2px;
+}
+
+.message {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: #facc15;
+  text-align: center;
+  margin-top: 5rem;
+}
+
+.equipesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.equipeCard {
+  background: #181818;
+  border: 2px solid #333;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.equipeCard:hover {
+  transform: translateY(-8px);
+  border-color: #facc15;
+  box-shadow: 0 8px 25px rgba(250, 204, 21, 0.2);
+}
+
+.equipeLogo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
+
+.equipeName {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  margin: 0;
+  color: #fff;
+}
+
+.equipeTag {
+  color: #aaa;
+  font-size: 1rem;
+}

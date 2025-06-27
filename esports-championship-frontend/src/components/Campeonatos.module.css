@@ -1,16 +1,27 @@
+/* Reset básico */
+html,
+body {
+  height: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background-color: #111;
+}
+
 /* Logotipo */
 .logo {
   font-size: 1.5rem;
   letter-spacing: 2px;
 }
 
-/* Menu de navegação */
+
 .menu {
   display: flex;
   gap: 2rem;
   list-style: none;
   margin: 0;
-  /* garantir */
   padding: 0;
 }
 
@@ -27,7 +38,21 @@
 }
 
 
-/* Containers principais */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #000;
+  color: white;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 20px;
+}
+
 .main-container {
   width: 100vw;
   margin: 0;
@@ -46,7 +71,7 @@
   width: 100%;
 }
 
-/* Sidebar - filtros */
+
 .sidebar {
   width: 250px;
   background-color: #ffd500;
@@ -96,7 +121,7 @@
   padding-bottom: 10px;
 }
 
-/* Conteúdo principal */
+
 .main-content {
   flex: 1;
   padding: 20px;
@@ -110,14 +135,14 @@
   display: inline-block;
 }
 
-/* Grid de cards */
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
 }
 
-/* Placeholder de imagem */
+
 .image-placeholder {
   width: 100px;
   height: 100px;
@@ -138,18 +163,16 @@
 }
 
 
-/* Cards */
+
 .card {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  /* garantir que elementos fiquem lado a lado */
   padding: 10px;
   background-color: #1a1a1a;
   border: 1px solid #FFD700;
   border-radius: 10px;
-  /* borda arredondada geral */
   color: white;
   position: relative;
   overflow: hidden;
@@ -197,10 +220,8 @@
 
 .card-content {
   flex: 1;
-  /* ocupa o resto do espaço */
   text-align: right;
   margin-left: auto;
-  /* empurra para direita */
   position: relative;
   z-index: 1;
   transition: opacity 0.3s ease-in-out;
@@ -226,7 +247,7 @@
   opacity: 1;
 }
 
-/* Títulos de seção */
+
 .section-title {
   display: flex;
   align-items: center;
@@ -243,7 +264,7 @@
   opacity: 0.3;
 }
 
-/* Indicadores visuais nas seções */
+
 .inscricoesabertas h1,
 .emandamento h1,
 .finalizados h1 {

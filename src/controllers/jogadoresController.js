@@ -1,22 +1,19 @@
 const Jogador = require('../models/Jogador');
 const Usuario = require('../models/Usuario');
 const Equipe = require('../models/Equipe');
+const Convite = require('../models/Convite');
 
 module.exports = {
   async create(req, res) {
     try {
-      const { usuario_id, equipe_id, apelido, riot_id, tag_line, posicao } = req.body;
+      const usuario_id = req.user.id;
+      const { apelido, riot_id, tag_line, posicao } = req.body;
 
       // valida se usuário existe
       const usuario = await Usuario.findByPk(usuario_id);
+
       if (!usuario) {
         return res.status(404).json({ error: 'Usuário não encontrado' });
-      }
-
-      // valida se equipe existe
-      const equipe = await Equipe.findByPk(equipe_id);
-      if (!equipe) {
-        return res.status(404).json({ error: 'Equipe não encontrada' });
       }
 
       // verifica se já existe um jogador com este usuario_id
@@ -33,12 +30,16 @@ module.exports = {
 
       const novoJogador = await Jogador.create({
         usuario_id,
-        equipe_id,
         apelido,
         riot_id,
         tag_line,
         posicao
       });
+
+      // Caso necessário, atualiza usuario.papel para 'jogador' (necessário para redirecionamento correto no frontend)
+      if (usuario.papel !== 'jogador') {
+        await usuario.update({ papel: 'jogador' });
+      }
 
       return res.status(201).json({ message: 'Jogador criado com sucesso', jogador: novoJogador });
     } catch (err) {
@@ -95,6 +96,49 @@ module.exports = {
     } catch (err) {
       console.error(err);
       return res.status(400).json({ error: err.message });
+    }
+  },
+
+  async acceptInviteLink(req, res) {
+    try {
+      const { token } = req.params;
+
+      const convite = await Convite.findOne({ where: { token, status: 'pendente' } });
+      if (!convite) {
+        return res.status(400).json({ error: 'Convite inválido ou já utilizado.' });
+      }
+
+      // Valida se equipe já tem 5 jogadores
+      const jogadoresCount = await Jogador.count({ where: { equipe_id: convite.equipe_id } });
+      if (jogadoresCount >= 5) {
+        return res.status(400).json({ error: 'Equipe já possui 5 jogadores.' });
+      }
+
+      const usuarioId = req.user.id;
+      let jogador = await Jogador.findOne({ where: { usuario_id: usuarioId } });
+      if (!jogador) {
+        return res.status(404).json({ error: 'Perfil de jogador não encontrado.' });
+      }
+
+      // atualiza equipe do jogador com o ID da equipe do convite
+      jogador.equipe_id = convite.equipe_id;
+      await jogador.save();
+
+      // setta convite como aceito
+      convite.status = 'aceito';
+      await convite.save();
+
+      // busca o perfil_jogador atualizado
+      jogador = await Jogador.findOne({ where: { usuario_id: usuarioId } });
+
+      return res.json({
+        message: 'Convite aceito com sucesso!',
+        equipe_id: convite.equipe_id,
+        perfil_jogador: jogador.toJSON()
+      });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Erro ao aceitar convite.' });
     }
   }
 };

@@ -4,6 +4,7 @@ import styles from "./Chaveamento.module.css";
 import CampeonatoHeader from "./CampeonatoHeader";
 import FuriaNav from "./FuriaNav";
 import api from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
 
 function generateBracket(teams) {
   if (!teams || teams.length === 0) return [];
@@ -71,31 +72,52 @@ const renderMatch = (match, key, partidasDoTorneio, styles) => {
 
 export default function ChaveamentoPage() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [campeonato, setCampeonato] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showTeams, setShowTeams] = useState(false);
-  const [expandedTeamId, setExpandedTeamId] = useState(null);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [registerMessage, setRegisterMessage] = useState('');
 
-  const handleExpandTeam = (teamId) => {
-    setExpandedTeamId(currentId => (currentId === teamId ? null : teamId));
+  const fetchTournamentData = async () => {
+    if (!id) return;
+    try {
+      const response = await api.get(`/torneios/${id}`);
+      setCampeonato(response.data);
+    } catch (err) {
+      console.error("Erro ao buscar dados do torneio:", err);
+      setCampeonato(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    async function fetchTournamentData() {
-      if (!id) return;
-      setLoading(true);
-      try {
-        const response = await api.get(`/torneios/${id}`);
-        setCampeonato(response.data);
-      } catch (err) {
-        console.error("Erro ao buscar dados do torneio:", err);
-        setCampeonato(null);
-      } finally {
-        setLoading(false);
-      }
-    }
+    setLoading(true);
     fetchTournamentData();
   }, [id]);
+
+  const handleRegisterTeam = async () => {
+    if (!user || !user.equipe) {
+      setRegisterMessage('Você precisa fazer parte de uma equipe para se inscrever.');
+      return;
+    }
+
+    setIsRegistering(true);
+    setRegisterMessage('');
+
+    try {
+      const response = await api.post(`/torneios/${id}/inscrever-equipe`, {
+        equipe_id: user.equipe.id,
+      });
+      setRegisterMessage(response.data.message || 'Inscrição realizada com sucesso!');
+      fetchTournamentData(); 
+    } catch (err) {
+      const errorMsg = err.response?.data?.error || 'Erro ao inscrever a equipe. Tente novamente.';
+      setRegisterMessage(errorMsg);
+    } finally {
+      setIsRegistering(false);
+    }
+  };
 
   if (loading) return <div className={styles.title}>A carregar chaveamento...</div>;
   if (!campeonato) return <div className={styles.title}>Torneio não encontrado ou erro ao carregar.</div>;
@@ -103,6 +125,8 @@ export default function ChaveamentoPage() {
   const equipesDoTorneio = campeonato.equipes || [];
   const partidasDoTorneio = campeonato.partidas || [];
   const totalTeams = 16;
+  
+  const isUserTeamRegistered = user?.equipe ? equipesDoTorneio.some(e => e.id === user.equipe.id) : false;
   
   const filledTeams = [
     ...equipesDoTorneio,
@@ -117,12 +141,55 @@ export default function ChaveamentoPage() {
   const leftRounds = generateBracket(leftTeams);
   const rightRounds = generateBracket(rightTeams);
 
+  const renderRegistrationActions = () => {
+    if (!user) {
+      return (
+        <Link to="/login" className={styles.registerButtonLink}>
+          Faça login para se inscrever
+        </Link>
+      );
+    }
+
+    if (isUserTeamRegistered) {
+      return (
+         <button className={`${styles.registerButton} ${styles.disabled}`}>
+          Sua equipe já está inscrita
+        </button>
+      );
+    }
+
+    if (!user.equipe) {
+      return (
+        <Link to="/minha-equipe" className={styles.registerButtonLink} title="Você precisa criar ou entrar numa equipe para se inscrever.">
+          Inscrever equipe
+        </Link>
+      );
+    }
+    
+    return (
+      <button 
+        onClick={handleRegisterTeam} 
+        disabled={isRegistering}
+        className={styles.registerButton}
+      >
+        {isRegistering ? 'A inscrever...' : `Inscrever minha equipe (${user.equipe.nome})`}
+      </button>
+    );
+  };
+
+  const registrationActions = (
+    <div className={styles.actionsContainer}>
+      {renderRegistrationActions()}
+      {registerMessage && <p className={styles.registerMessage}>{registerMessage}</p>}
+    </div>
+  );
+
   return (
     <>
       <FuriaNav />
       <div style={{ height: '70px' }}></div>
       <div>
-        <CampeonatoHeader campeonato={campeonato} />
+        <CampeonatoHeader campeonato={campeonato} actions={registrationActions} />
         <main className={styles.mainContainer}>
           <section className={styles.bracketSection}>
             <h1 className={styles.title}>CHAVEAMENTO</h1>
@@ -130,9 +197,7 @@ export default function ChaveamentoPage() {
               <div className={styles.bracketTree}>
                 {leftRounds.map((round, roundIdx) => (
                   <div className={styles.roundColumn} key={`left-round-${roundIdx}`}>
-                    {round.map((match, matchIdx) => (
-                      renderMatch(match, `left-match-${roundIdx}-${matchIdx}`, partidasDoTorneio, styles)
-                    ))}
+                    {round.map((match, matchIdx) => renderMatch(match, `left-match-${roundIdx}-${matchIdx}`, partidasDoTorneio, styles))}
                   </div>
                 ))}
               </div>
@@ -146,14 +211,25 @@ export default function ChaveamentoPage() {
               <div className={styles.bracketTree}>
                 {[...rightRounds].reverse().map((round, roundIdx) => (
                   <div className={styles.roundColumn} key={`right-round-${roundIdx}`}>
-                    {round.map((match, matchIdx) => (
-                       renderMatch(match, `right-match-${roundIdx}-${matchIdx}`, partidasDoTorneio, styles)
-                    ))}
+                    {round.map((match, matchIdx) => renderMatch(match, `right-match-${roundIdx}-${matchIdx}`, partidasDoTorneio, styles))}
                   </div>
                 ))}
               </div>
             </div>
           </section>
+
+          <div className={styles.twitchContainer}>
+            <h2 className={styles.twitchTitle}>Transmissão Ao Vivo</h2>
+            <div className={styles.twitchEmbedWrapper}>
+              <iframe
+                src="https://player.twitch.tv/?channel=gamersclubvalorant&parent=localhost"
+                height="480"
+                width="1080"
+                allowFullScreen={true}
+                title="Transmissão Ao Vivo do canal gamersclubvalorant"
+              ></iframe>
+            </div>
+          </div>
         </main>
       </div>
     </>

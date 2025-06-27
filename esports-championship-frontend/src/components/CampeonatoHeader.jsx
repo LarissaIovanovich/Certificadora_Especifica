@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./Chaveamento.module.css";
 
-export default function CampeonatoHeader({ campeonato }) {
+
+export default function CampeonatoHeader({ campeonato, actions }) {
   const {
     nome = "",
     descricao = "",
@@ -19,6 +20,7 @@ export default function CampeonatoHeader({ campeonato }) {
           src={url_imagem_banner}
           alt={nome}
           className={styles.campeonatoImage}
+          onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/200x200/000000/f5c400?text=Logo'; }}
         />
       </div>
       <div className={styles.headerInfoHorizontal}>
@@ -37,6 +39,8 @@ export default function CampeonatoHeader({ campeonato }) {
             </span>
           )}
         </div>
+        {actions}
+
       </div>
     </header>
   );

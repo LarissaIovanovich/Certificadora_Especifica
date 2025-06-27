@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import api from '../services/api'; // Seu arquivo de configuração do Axios
-import styles from './RelatorioPartidaPage.module.css'; // O CSS que já ajustamos
+import { useParams } from 'react-router-dom';
+import api from '../services/api';
+import styles from './RelatorioPartidaPage.module.css'; // O CSS é importado aqui
+import FuriaNav from './FuriaNav';
 
 export default function RelatorioPartidaPage() {
   const { id } = useParams();
@@ -13,7 +14,7 @@ export default function RelatorioPartidaPage() {
     async function fetchRelatorio() {
       try {
         setLoading(true);
-        setError(null); // Limpa erros anteriores
+        setError(null);
         const response = await api.get(`/partidas/${id}/relatorio`);
         setRelatorio(response.data);
       } catch (err) {
@@ -27,7 +28,6 @@ export default function RelatorioPartidaPage() {
     fetchRelatorio();
   }, [id]);
 
-  // --- Funções Auxiliares para extrair dados do NOVO JSON ---
   const getMvp = (data) => {
     if (!data) return null;
     const todosJogadores = [...(data.equipeA?.jogadores || []), ...(data.equipeB?.jogadores || [])];
@@ -45,7 +45,6 @@ export default function RelatorioPartidaPage() {
     }, { abates: 0, mortes: 0, assistencias: 0 });
   };
   
-  // Função para renderizar a tabela de uma equipe
   const renderTeamTable = (equipe) => {
     if (!equipe || !equipe.jogadores || equipe.jogadores.length === 0) {
       return <p>Dados dos jogadores não disponíveis.</p>;
@@ -56,7 +55,6 @@ export default function RelatorioPartidaPage() {
         <div className={styles.teamHeader}>
             <img src={equipe.url_logo} alt={`Logo ${equipe.nome}`} className={styles.teamLogo} />
             <h2 className={styles.sectionTitle}>{equipe.nome}</h2>
-            {/* A INFORMAÇÃO DO PLACAR FOI REMOVIDA DAQUI */}
         </div>
         <div className={styles.tableWrapper}>
           <table className={styles.playersTable}>
@@ -82,17 +80,31 @@ export default function RelatorioPartidaPage() {
     );
   };
 
-  // --- Lógica de Renderização Principal ---
   if (loading) {
-    return <div className={styles.container}>Carregando Relatório...</div>;
+    return (
+      <>
+        <FuriaNav />
+        <div className={styles.loadingContainer}>A carregar Relatório...</div>
+      </>
+    );
   }
 
   if (error) {
-    return <div className={styles.container}>{error}</div>;
+    return (
+      <>
+        <FuriaNav />
+        <div className={styles.loadingContainer}>{error}</div>
+      </>
+    );
   }
 
   if (!relatorio) {
-    return <div className={styles.container}>Nenhum dado encontrado para esta partida.</div>;
+    return (
+      <>
+        <FuriaNav />
+        <div className={styles.loadingContainer}>Nenhum dado encontrado para esta partida.</div>
+      </>
+    );
   }
 
   const mvp = getMvp(relatorio);
@@ -100,29 +112,33 @@ export default function RelatorioPartidaPage() {
 
   return (
     <>
-    <div className={styles.container}>
-      <h1 className={styles.title}>
-        Relatório da Partida: {relatorio.equipeA?.nome || 'Time A'} vs {relatorio.equipeB?.nome || 'Time B'}
-      </h1>
-      <p className={styles.subtitle}>Mapa: {relatorio.mapa || 'Não definido'}</p>
+      <FuriaNav /> 
+      <div className={styles.pageContent}>
+        <div className={styles.container}>
+          <h1 className={styles.title}>
+            Relatório da Partida: {relatorio.equipeA?.nome || 'Time A'} vs {relatorio.equipeB?.nome || 'Time B'}
+          </h1>
+          <p className={styles.subtitle}>Mapa: {relatorio.mapa || 'Não definido'}</p>
 
-      <section className={styles.summarySection}>
-        <div className={styles.summaryCard}>
-          <h2>MVP da Partida</h2>
-          <p className={styles.mvpName}>{mvp ? mvp.nome : 'N/A'}</p>
+          <section className={styles.summarySection}>
+            <div className={styles.summaryCard}>
+              <h2>MVP da Partida</h2>
+              <p className={styles.mvpName}>{mvp ? mvp.nome : 'N/A'}</p>
+            </div>
+            <div className={styles.summaryCard}>
+              <h2>Estatísticas Totais</h2>
+              <p>Abates: {totalStats.abates}</p>
+              <p>Mortes: {totalStats.mortes}</p>
+              <p>Assistências: {totalStats.assistencias}</p>
+            </div>
+          </section>
+
+          <div className={styles.tablesContainer}>
+            {renderTeamTable(relatorio.equipeA)}
+            {renderTeamTable(relatorio.equipeB)}
+          </div>
         </div>
-        <div className={styles.summaryCard}>
-          <h2>Estatísticas Totais</h2>
-          <p>Abates: {totalStats.abates}</p>
-          <p>Mortes: {totalStats.mortes}</p>
-          <p>Assistências: {totalStats.assistencias}</p>
-        </div>
-      </section>
-    </div>
-    <div style={{display: 'flex', flexDirection: 'row', width: '50rem', gap: '20px'}}>
-    {renderTeamTable(relatorio.equipeA)}
-    {renderTeamTable(relatorio.equipeB)}
-    </div>
+      </div>
     </>
   );
 }

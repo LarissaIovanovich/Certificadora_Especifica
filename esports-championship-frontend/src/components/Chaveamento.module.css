@@ -920,3 +920,99 @@ flex-shrink: 0;
   border: none; 
   border-radius: 8px; 
 }
+.actionsContainer {
+  margin-top: 1rem;
+  text-align: right;
+  min-height: 40px; 
+}
+
+.registerButton {
+  background-color: #f5c400;
+  color: #121212;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.registerButton:hover {
+  background-color: #ffd700;
+}
+.registerButton.disabled {
+  background-color: #f5c400;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.alreadyRegistered, .noTeamMessage, .registerMessage {
+  color: #fff;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.registerMessage {
+    margin-top: 0.5rem;
+    color: #ffd700;
+}
+
+.actionsContainer {
+  margin-top: 1rem;
+  text-align: right;
+  min-height: 40px;
+}
+
+.registerButton {
+  background-color: #f5c400;
+  color: #121212;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.registerButton:hover {
+  background-color: #ffd700;
+}
+
+.registerButton:disabled {
+  background-color: #555;
+  color: #888;
+  cursor: not-allowed;
+  border-color: #555;
+}
+
+.registerButtonLink {
+  display: inline-block;
+  background-color: #f5c400;
+  color: #121212;
+  padding: 0.5rem 1rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.registerButtonLink:hover {
+  background-color: #ffd700;
+}
+
+.alreadyRegistered, .noTeamMessage, .registerMessage {
+  color: #fff;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.registerMessage {
+    margin-top: 0.5rem;
+    color: #ffd700;
+}

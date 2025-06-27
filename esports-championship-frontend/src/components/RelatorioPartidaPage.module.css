@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
+/* --- ESTILOS GERAIS DA PÁGINA E CARDS (sem alterações) --- */
 .container {
-  max-width: 900px;
+  padding: 2rem;
+  max-width: 1200px; /* Aumentei a largura máxima para acomodar as tabelas lado a lado */
   margin: 0 auto;
   font-family: 'Inter', sans-serif; 
   color: #e0e0e0;
@@ -9,7 +11,7 @@
 
 .title {
   text-align: center;
-  margin-bottom: 0.5rem; 
+  margin-bottom: 0.5rem;
   color: #ffc107;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -27,6 +29,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
+  margin-bottom: 3rem;
   text-align: center;
 }
 
@@ -35,19 +38,6 @@
   padding: 1.5rem;
   border-radius: 12px;
   border: 1px solid #444;
-  transition: transform 0.2s ease-in-out;
-}
-
-.summaryCard:hover {
-    transform: translateY(-5px);
-}
-
-.summaryCard h2 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    color: #aaa;
-    font-size: 0.9rem;
-    text-transform: uppercase;
 }
 
 .mvpName {
@@ -56,11 +46,36 @@
   color: #ffc107;
 }
 
-.teamSection {
-    margin-top: 3rem;
-    width: 100%;
+/* --- ESTILOS PARA O LAYOUT CORRETO --- */
+.pageContent {
+  padding-top: 80px; /* Espaçamento para a barra de navegação */
 }
 
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+/* --- AJUSTE PRINCIPAL PARA AS TABELAS LADO A LADO --- */
+.tablesContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* Centraliza as tabelas se houver espaço */
+  gap: 2rem;               /* Espaço entre as duas tabelas */
+  align-items: flex-start;
+  flex-wrap: wrap;         /* Permite que as tabelas quebrem para a linha de baixo em telas menores */
+}
+
+.teamSection {
+  flex: 1; /* Faz com que cada tabela tente ocupar o mesmo espaço */
+  min-width: 420px; /* Largura mínima para cada tabela antes de quebrar a linha */
+}
+
+/* --- ESTILOS DA TABELA (sem alterações) --- */
 .teamHeader {
   display: flex;
   align-items: center;
@@ -79,13 +94,11 @@
 .sectionTitle {
   font-size: 1.5rem;
   font-weight: 700;
-  border-bottom: none; 
-  padding-bottom: 0;
 }
 
 .tableWrapper {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .playersTable {
@@ -117,7 +130,7 @@
 }
 
 .playersTable tbody tr:hover {
-    background-color: #3f3f41;
+  background-color: #3f3f41;
 }
 
 .mvpRow {
@@ -126,5 +139,5 @@
 }
 
 .mvpRow td {
-    font-weight: 600;
+  font-weight: 600;
 }

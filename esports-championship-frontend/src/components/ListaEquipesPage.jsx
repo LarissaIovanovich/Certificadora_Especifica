@@ -1,9 +1,8 @@
-// em src/pages/ListaEquipesPage.js
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import FuriaNav from './FuriaNav';
 import styles from './ListaEquipesPage.module.css';
+import api from '../services/api';
 
 export default function ListaEquipesPage() {
   const [equipes, setEquipes] = useState([]);
@@ -13,12 +12,8 @@ export default function ListaEquipesPage() {
     async function fetchAllEquipes() {
       try {
         setLoading(true);
-        const response = await fetch('/api/equipes');
-        if (!response.ok) {
-          throw new Error('Falha ao buscar equipes');
-        }
-        const data = await response.json();
-        setEquipes(data);
+        const response = await api.get('/equipes');
+        setEquipes(response.data);
       } catch (error) {
         console.error("Erro:", error);
       } finally {
